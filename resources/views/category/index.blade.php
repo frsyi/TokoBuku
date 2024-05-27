@@ -48,7 +48,7 @@
                                 <tr class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700">
                                     <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
                                         <a href="{{ route('category.edit', $category) }}" class="hover:underline">
-                                            {{ $category->title }}
+                                            {{ $category->name }}
                                         </a>
                                     </td>
                                     <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
