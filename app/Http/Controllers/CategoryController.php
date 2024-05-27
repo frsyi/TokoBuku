@@ -38,28 +38,42 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        return view('category.edit', compact('category'));
+        // Memeriksa apakah pengguna yang masuk adalah admin
+        if (auth()->user()->is_admin) {
+            return view('category.edit', compact('category'));
+        } else {
+            // Jika bukan admin, redirect ke halaman index kategori dengan pesan akses ditolak
+            return redirect()->route('category.index')->with('danger', 'You are not authorized to edit this category!');
+        }
     }
 
     public function update(Request $request, Category $category)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-        ]);
+        // Memeriksa apakah pengguna yang masuk adalah admin
+        if (auth()->user()->is_admin) {
+            $request->validate([
+                'name' => 'required|max:255',
+            ]);
 
-        $category->update([
-            'name' => ucfirst($request->name),
-        ]);
+            $category->update([
+                'name' => ucfirst($request->name),
+            ]);
 
-        return redirect()->route('category.index')->with('success', 'Category updated successfully!');
+            return redirect()->route('category.index')->with('success', 'Category updated successfully!');
+        } else {
+            // Jika bukan admin, redirect ke halaman index kategori dengan pesan akses ditolak
+            return redirect()->route('category.index')->with('danger', 'You are not authorized to update this category!');
+        }
     }
 
     public function destroy(Category $category)
     {
-        if (auth()->user()->id == $category->user_id) {
+        // Memeriksa apakah pengguna yang masuk adalah admin
+        if (auth()->user()->is_admin) {
             $category->delete();
             return redirect()->route('category.index')->with('success', 'Category deleted successfully!');
         } else {
+            // Jika bukan admin, redirect ke halaman index kategori dengan pesan akses ditolak
             return redirect()->route('category.index')->with('danger', 'You are not authorized to delete this category!');
         }
     }
