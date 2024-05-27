@@ -2,29 +2,22 @@
 
 namespace App\Models;
 
-use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Book extends Model
+class Order extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'category_id',
-        'title',
-        'author',
-        'publication_year',
-        'price',
-        'description',
-        'image',
+        'user_id'
     ];
 
-    public function category(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(User::class);
     }
 
     public function transactions(): HasMany

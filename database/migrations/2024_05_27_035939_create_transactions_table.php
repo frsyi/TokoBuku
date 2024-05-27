@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('book_id');
-            $table->string('no_telp');
-            $table->string('address');
+            $table->foreignId('book_id')->constrained();
+            $table->foreignId('order_id')->constrained();
+            $table->integer('amount');
+            $table->decimal('total_price');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('transactions');
     }
 };
