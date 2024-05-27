@@ -21,7 +21,7 @@
                                 <div class="flex justify-between mt-4">
                                     <div>
                                         <h3 class="text-sm text-gray-700">
-                                            <a href="{{ route('book.show', $book->id) }}">
+                                            <a href="{{ route('book.detail', $book->id) }}">
                                                 <span aria-hidden="true" class="absolute inset-0"></span>
                                                 {{ $book->title }}
                                             </a>

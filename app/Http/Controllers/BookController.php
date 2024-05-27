@@ -19,6 +19,11 @@ class BookController extends Controller
         return view('book.index', compact('books'));
     }
 
+    public function show(Book $book)
+    {
+        return view('book.detail', compact('book'));
+    }
+
     public function create()
     {
         // Ambil semua kategori untuk form create

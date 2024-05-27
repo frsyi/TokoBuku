@@ -23,6 +23,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('book', BookController::class);
     Route::resource('user', UserController::class);
     Route::resource('category', CategoryController::class);
+
+    Route::get('/book/{book}', [BookController::class, 'show'])->name('book.detail');
+
+
 });
 
 Route::middleware(['admin'])->group(function () {
