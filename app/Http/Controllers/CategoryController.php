@@ -29,7 +29,6 @@ class CategoryController extends Controller
         // Membuat kategori baru dengan menambahkan user_id dari pengguna yang sedang login
         Category::create([
             'name' => ucfirst($request->name),
-            'user_id' => auth()->user()->id,
         ]);
 
         // Redirect ke halaman index kategori dengan pesan sukses
