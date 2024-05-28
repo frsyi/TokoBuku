@@ -13,7 +13,7 @@
                         @csrf
                         @method('post')
                         <div class="mb-6">
-                            <x-input-label for="name" :value="__('Name')" />
+                            <x-input-label for="name" :value="__('Caategory Name')" />
                             <x-text-input id="name" name="name" type="text" class="block w-full mt-1" required autofocus autocomplete="name" />
                             <x-input-error class="mt-2" :messages="$errors->get('name')" />
                         </div>

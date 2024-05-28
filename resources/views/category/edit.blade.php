@@ -14,7 +14,7 @@
                         @method('patch')
 
                         <div class="mb-6">
-                            <x-input-label for="name" :value="__('Name')" />
+                            <x-input-label for="name" :value="__('Category Name')" />
                             <x-text-input id="name" name="name" type="text" class="block w-full mt-1" :value="old('name', $category->name)" required autofocus autocomplete="name" />
                             <x-input-error class="mt-2" :messages="$errors->get('name')" />
                         </div>
