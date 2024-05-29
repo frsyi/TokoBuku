@@ -58,7 +58,7 @@ class BookController extends Controller
     public function update(Request $request, Book $book)
     {
         $request->validate([
-            'category_id' => 'nullable|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'title' => 'required|max:255',
             'author' => 'required|max:255',
             'publication_year' => 'required|max:4',
@@ -67,15 +67,12 @@ class BookController extends Controller
             'image' => 'nullable|image|file|max:2048',
         ]);
 
-        // Menghapus gambar lama jika ada
-        if ($request->hasFile('image') && $book->image) {
-            Storage::delete($book->image);
-        }
-
         $book->update($request->all());
 
-        // Menyimpan gambar baru jika ada
         if ($request->hasFile('image')) {
+            if ($request->oldImage) {
+                Storage::delete($request->oldImage);
+            }
             $book->image = $request->file('image')->store('images', 'public');
             $book->save();
         }
@@ -85,12 +82,9 @@ class BookController extends Controller
 
     public function destroy(Book $book)
     {
-        // Menghapus gambar dari storage jika ada
         if ($book->image) {
             Storage::delete($book->image);
         }
-
-        // Menghapus buku dari database
         $book->delete();
 
         // Redirect ke halaman index dengan pesan sukses

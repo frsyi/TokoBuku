@@ -43,7 +43,7 @@
                         </div>
                         <div class="mb-6">
                             <x-input-label for="image" :value="__('Image')" />
-                            <img class="mb-3 img-preview img-fluid col-sm-5" style="display: none;">
+                            <img class="mb-3 img-preview img-fluid col-sm-5 d-block" style="max-width: 200px;">
                             <x-text-input id="image" name="image" type="file" class="block w-full mt-1" onchange="previewImage()" required />
                             <x-input-error class="mt-2" :messages="$errors->get('image')" />
                         </div>
