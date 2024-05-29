@@ -57,7 +57,7 @@
                             @forelse ($books as $book)
                                 <tr class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700">
                                     <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        <a href="{{ route('book.edit', $book) }}"
+                                        <a href="{{ route('book.detail', $book) }}"
                                             class="hover:underline">{{ $book->title }}</a>
                                     </td>
                                     <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
@@ -76,14 +76,16 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex space-x-3">
+                                            {{-- Edit Button --}}
                                             <a href="{{ route('book.edit', $book) }}" class="text-blue-600 dark:text-blue-400">
-                                                Edit
+                                                <x-heroicon-o-pencil-square class="w-6 h-6"/>
                                             </a>
-                                            <form action="{{ route('book.destroy', $book) }}" method="Post">
+                                            {{-- Delete Button --}}
+                                            <form action="{{ route('book.destroy', $book) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 dark:text-red-400">
-                                                    Delete
+                                                    <x-heroicon-o-trash class="w-6 h-6"/>
                                                 </button>
                                             </form>
                                         </div>

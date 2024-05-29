@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Book') }}
+            {{ __('Add Book') }}
         </h2>
     </x-slot>
 
@@ -10,7 +10,7 @@
             <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     {{-- Book Store Form --}}
-                    <form method="post" action="{{ route('book.store') }}" enctype="multipart/form-data" class="">
+                    <form method="post" action="{{ route('book.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-6">
                             <x-input-label for="title" :value="__('Title')" />
@@ -43,7 +43,8 @@
                         </div>
                         <div class="mb-6">
                             <x-input-label for="image" :value="__('Image')" />
-                            <x-text-input id="image" name="image" type="file" class="block w-full mt-1" required />
+                            <img class="mb-3 img-preview img-fluid col-sm-5" style="display: none;">
+                            <x-text-input id="image" name="image" type="file" class="block w-full mt-1" onchange="previewImage()" required />
                             <x-input-error class="mt-2" :messages="$errors->get('image')" />
                         </div>
                         <div class="mb-6">
@@ -53,7 +54,7 @@
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"
                                         {{ old('category_id', '') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->title }}
+                                        {{ $category->name }}
                                     </option>
                                 @endforeach
                             </x-select>
@@ -70,3 +71,19 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    function previewImage() {
+        const image = document.querySelector('#image');
+        const imgPreview = document.querySelector('.img-preview');
+
+        imgPreview.style.display = 'block';
+
+        const oFReader = new FileReader();
+        oFReader.readAsDataURL(image.files[0]);
+
+        oFReader.onload = function(oFREvent) {
+            imgPreview.src = oFREvent.target.result;
+        }
+    }
+</script>

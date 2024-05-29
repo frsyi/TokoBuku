@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Book;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
     public function index()
     {
-        // Ambil semua buku dengan relasi category dan urutkan berdasarkan created_at secara descending
-        $books = Book::with('category')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Return view dengan data books
+        $books = Book::with('category')->orderBy('created_at', 'desc')->get();
         return view('book.index', compact('books'));
     }
 
@@ -26,25 +22,22 @@ class BookController extends Controller
 
     public function create()
     {
-        // Ambil semua kategori untuk form create
         $categories = Category::all();
         return view('book.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'nullable|exists:categories,id',
             'title' => 'required|max:255',
             'author' => 'required|max:255',
             'publication_year' => 'required|max:4',
             'price' => 'required|numeric',
             'description' => 'required',
-            'image' => 'required|image|max:2048',
+            'image' => 'required|image|file|max:2048',
         ]);
 
-        // Buat buku baru
         $book = new Book($request->all());
 
         if ($request->hasFile('image')) {
@@ -54,5 +47,53 @@ class BookController extends Controller
         $book->save();
 
         return redirect()->route('book.index')->with('success', 'Book created successfully!');
+    }
+
+    public function edit(Book $book)
+    {
+        $categories = Category::all();
+        return view('book.edit', compact('book', 'categories'));
+    }
+
+    public function update(Request $request, Book $book)
+    {
+        $request->validate([
+            'category_id' => 'nullable|exists:categories,id',
+            'title' => 'required|max:255',
+            'author' => 'required|max:255',
+            'publication_year' => 'required|max:4',
+            'price' => 'required|numeric',
+            'description' => 'required',
+            'image' => 'nullable|image|file|max:2048',
+        ]);
+
+        // Menghapus gambar lama jika ada
+        if ($request->hasFile('image') && $book->image) {
+            Storage::delete($book->image);
+        }
+
+        $book->update($request->all());
+
+        // Menyimpan gambar baru jika ada
+        if ($request->hasFile('image')) {
+            $book->image = $request->file('image')->store('images', 'public');
+            $book->save();
+        }
+
+        return redirect()->route('book.index')->with('success', 'Book updated successfully!');
+    }
+
+    public function destroy(Book $book)
+    {
+        // Menghapus gambar dari storage jika ada
+        if ($book->image) {
+            Storage::delete($book->image);
+        }
+
+        // Menghapus buku dari database
+        $book->delete();
+
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('book.index')->with('success', 'Book deleted successfully!');
     }
 }

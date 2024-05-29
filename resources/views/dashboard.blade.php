@@ -16,7 +16,7 @@
                             @foreach($related_books as $book)
                             <div class="relative group">
                                 <div class="w-full overflow-hidden bg-gray-200 rounded-md aspect-h-1 aspect-w-1 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                                    <img src="{{ asset($book->image_path) }}" alt="{{ $book->title }}" class="object-cover object-center w-full h-full lg:h-full lg:w-full">
+                                    <img src="{{ asset('storage/' . $book->image) }}" alt="{{ $book->title }}" class="object-cover object-center w-full h-full lg:h-full lg:w-full">
                                 </div>
                                 <div class="flex justify-between mt-4">
                                     <div>
