@@ -1,3 +1,8 @@
+<head>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
@@ -16,7 +21,7 @@
                             @foreach($related_books as $book)
                             <div class="col-md-3">
                                 <div class="h-full card" style="width: 18rem;">
-                                    <a href="{{ route('book.detail', $book->id) }}">
+                                    <a href="{{ route('book.show', $book->id) }}">
                                         <img src="{{ asset('storage/' . $book->image) }}" class="card-img-top" alt="{{ $book->title }}" style="height: 300px; object-fit: cover;">
                                     </a>
                                     <div class="flex flex-col justify-between card-body">
@@ -31,7 +36,7 @@
                                         </div>
                                         <div class="mt-4">
                                             <p class="font-bold card-text">${{ number_format($book->price, 2) }}</p>
-                                            <a href="{{ route('order.index', $book->id) }}" class="mt-2 btn btn-primary">Order</a>
+                                            <x-order-button href="{{ route('order.index', $book->id) }" />
                                         </div>
                                     </div>
                                 </div>

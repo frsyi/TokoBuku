@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\CatalogueController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
@@ -24,7 +24,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('book', BookController::class);
     Route::resource('category', CategoryController::class);
     Route::resource('catalogue', CatalogueController::class);
+    Route::resource('order', OrderController::class);
+
+    Route::get('order/{id}', [OrderController::class, 'index'])->name('order.index');
 });
+
 
 Route::middleware(['admin'])->group(function () {
 });

@@ -18,7 +18,7 @@
                     </div>
                     <div class="md:w-3/4 md:pl-6">
                         <h1 class="text-2xl font-bold">{{ $book->title }}</h1>
-                        <p class="text-gray-600">{{ $book->author }}</p>
+                        <p class="text-gray-600">{{ $book->author }}</p><br>
                         <p class="text-gray-600">Publication Year: {{ $book->publication_year }}</p>
                         <p class="text-gray-600">Category: {{ $book->category->name ?? 'N/A' }}</p>
                         <p class="text-gray-600">Price: ${{ $book->price }}</p>
