@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('catalogue', CatalogueController::class);
     Route::resource('order', OrderController::class);
 
-    Route::get('order/{id}', [OrderController::class, 'index'])->name('order.index');
+    Route::get('order/{id}', [OrderController::class, 'show'])->name('order.show');
 });
 
 

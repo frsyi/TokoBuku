@@ -22,7 +22,7 @@
                         @endif
                     </div>
                     <div class="md:w-3/4 md:pl-6">
-                        <h1 class="text-2xl font-bold">{{ $book->title }}</h1>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $book->title }}</h1>
                         <table class="table mt-3">
                             <tbody>
                                 <tr class="text-gray-600 align-top">
@@ -51,16 +51,19 @@
                                     <td>{{ $book->description }}</td>
                                 </tr>
                                 <form action="" method="POST">
+                                    @csrf
                                     <tr>
-                                        <td>Jumlah Pesan</td>
-                                        <td>:</td>
+                                        <td class="font-bold text-gray-900 dark:text-gray-100">Jumlah Pesan</td>
+                                        <td class="px-2">:</td>
                                         <td>
                                             <x-text-input id="amount" name="amount" type="text" class="block mt-2" required autofocus autocomplete="amount" />
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            <x-order-button href="{{ route('order.show') }}" />
+                                        <td colspan="3">
+                                            <x-order-button href="" class="mt-3 nav-link">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </x-order-button>
                                         </td>
                                     </tr>
                                 </form>

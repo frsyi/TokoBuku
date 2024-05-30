@@ -36,7 +36,9 @@
                                         </div>
                                         <div class="mt-4">
                                             <p class="font-bold card-text">${{ number_format($book->price, 2) }}</p>
-                                            <x-order-button href="{{ route('order.show', $book->id) }" />
+                                            <x-order-button :href="route('order.show', ['id' => $book->id])" class="nav-link">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </x-order-button>
                                         </div>
                                     </div>
                                 </div>
