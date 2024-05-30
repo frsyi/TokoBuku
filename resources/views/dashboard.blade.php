@@ -36,7 +36,7 @@
                                         </div>
                                         <div class="mt-4">
                                             <p class="font-bold card-text">${{ number_format($book->price, 2) }}</p>
-                                            <x-order-button href="{{ route('order.index', $book->id) }" />
+                                            <x-order-button href="{{ route('order.show', $book->id) }" />
                                         </div>
                                     </div>
                                 </div>

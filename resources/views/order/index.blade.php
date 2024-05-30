@@ -60,7 +60,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <x-order-button href="{{ route('category.create') }}" />
+                                            <x-order-button href="{{ route('order.show') }}" />
                                         </td>
                                     </tr>
                                 </form>

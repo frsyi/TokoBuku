@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        // Define your model to policy mappings here
     ];
 
     /**
@@ -21,8 +21,14 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerPolicies();
+
         Gate::define('admin', function ($user) {
             return $user->is_admin;
+        });
+
+        Gate::define('buyer', function ($user) {
+            return !$user->is_admin;
         });
     }
 }
