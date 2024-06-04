@@ -12,15 +12,19 @@ class Book extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'category_id',
-        'title',
-        'author',
-        'publication_year',
-        'price',
-        'description',
-        'image',
+    protected $casts = [
+        'is_complete' => 'boolean',
     ];
+
+    // protected $fillable = [
+    //     'category_id',
+    //     'title',
+    //     'author',
+    //     'publication_year',
+    //     'price',
+    //     'description',
+    //     'image',
+    // ];
 
     public function category(): BelongsTo
     {
