@@ -36,9 +36,10 @@
                                         </div>
                                         <div class="mt-4">
                                             <p class="font-bold card-text">${{ number_format($book->price, 2) }}</p>
-                                            <x-order-button :href="route('order.show', ['id' => $book->id])" class="nav-link">
+                                            <a href="{{ route('order.index', ['id' => $book->id]) }}" class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md dark:bg-gray-200 dark:text-gray-800 hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                                                 <i class="fas fa-shopping-cart"></i>
-                                            </x-order-button>
+                                                Order
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

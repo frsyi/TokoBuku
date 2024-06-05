@@ -35,17 +35,18 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                @auth
+                    @can('buyer')
+                        <a href="{{ route('order.index') }}" class="inline-flex items-center px-3 py-2 ml-4 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                    @endcan
+                @endauth
+
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
                             @auth
-                                @can('buyer')
-                                    <div>
-                                        <a href="{{ route('order.index') }}" class="nav-link">
-                                            <i class="fas fa-shopping-cart"></i>
-                                        </a>
-                                    </div>
-                                @endcan
                                 <div>{{ Auth::user()->name }}</div>
                                 <div class="ms-1">
                                     <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -54,7 +55,6 @@
                                 </div>
                             @endauth
                         </button>
-
                     </x-slot>
 
                     <x-slot name="content">
