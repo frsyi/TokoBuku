@@ -12,19 +12,23 @@ class Book extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'is_complete' => 'boolean',
-    ];
 
-    // protected $fillable = [
-    //     'category_id',
-    //     'title',
-    //     'author',
-    //     'publication_year',
-    //     'price',
-    //     'description',
-    //     'image',
+    //ini kalo pake API tidak dicommand
+    // protected $casts = [
+    //     'is_complete' => 'boolean',
     // ];
+
+
+    //ini kalo mau masukin book di blade tidak boleh dicommand
+    protected $fillable = [
+        'category_id',
+        'title',
+        'author',
+        'publication_year',
+        'price',
+        'description',
+        'image',
+    ];
 
     public function category(): BelongsTo
     {
@@ -36,5 +40,5 @@ class Book extends Model
         return $this->hasMany(Transaction::class);
     }
 
-    
+
 }
