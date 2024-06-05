@@ -42,7 +42,7 @@
                                             <p class="card-text">{{ $book->author }}</p>
                                         </div>
                                         <div class="mt-4">
-                                            <p class="font-bold card-text">${{ number_format($book->price, 2) }}</p>
+                                            <p class="font-bold card-text">Rp{{ number_format($book->price, 2) }}</p>
                                             <form action="{{ route('orders.store') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="book_id" value="{{ $book->id }}">

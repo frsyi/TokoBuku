@@ -39,9 +39,14 @@ class OrderController extends Controller
     }
 
     public function destroy(Order $order)
-{
-    $order->delete();
-    return redirect()->route('orders.index')->with('success', 'Order deleted successfully!');
-}
+    {
+        $order->delete();
+        return redirect()->route('orders.index')->with('success', 'Order deleted successfully!');
+    }
+
+    public function checkout()
+    {
+        return redirect()->route('orders.index')->with('success', 'Checkout successful!');
+    }
 
 }
