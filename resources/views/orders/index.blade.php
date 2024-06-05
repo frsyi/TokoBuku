@@ -21,18 +21,20 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($orders as $order)
-                            <tr>
-                                <!-- Example book information -->
-                                <td class="px-6 py-4 whitespace-nowrap">Book Title</td>
-                                <td class="px-6 py-4 whitespace-nowrap">2</td> <!-- Example quantity -->
-                                <td class="px-6 py-4 whitespace-nowrap">$10.00</td> <!-- Example unit price -->
-                                <td class="px-6 py-4 whitespace-nowrap">$20.00</td> <!-- Example total price -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <!-- Delete button (action) -->
-                                    <button class="text-red-600 hover:text-red-900" onclick="deleteOrder({{ $order->id }})">Delete</button>
-                                </td>
-                            </tr>
-                            @endforeach
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $order->book_title }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $order->amount }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">${{ number_format($order->unit_price, 2) }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">${{ number_format($order->total_price, 2) }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @endforeach
                         </tbody>
                     </table>
                 </div>

@@ -27,7 +27,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('order', OrderController::class);
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-   
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+
+
+
 
 
 });
