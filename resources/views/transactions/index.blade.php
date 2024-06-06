@@ -35,7 +35,6 @@
 
                 <div class="p-6 bg-white border-b border-gray-200">
                     <table class="min-w-full divide-y divide-gray-200">
-
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">ID Order</th>
@@ -43,18 +42,15 @@
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
                             </tr>
                         </thead>
-
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($transactions as $transaction)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->order->id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->book_title }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->amount }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $transactions->first()->order->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $transactions->first()->order->created_at->format('Y-m-d') }}</td>
                             </tr>
-                            @endforeach
                         </tbody>
                     </table>
                 </div>
+                
 
             </div>
 
@@ -74,13 +70,13 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($transactions as $transaction)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->book_title }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->amount }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($transaction->unit_price, 2) }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($transaction->total_price, 2) }}</td>
-                            </tr>
-                        @endforeach
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->book_title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->amount }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($transaction->order->unit_price, 2) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($transaction->total_price, 2) }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
 
 
