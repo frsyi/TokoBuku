@@ -14,22 +14,27 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
 
 
-            <div class="p-6 mb-6 bg-white border-b border-gray-200">
-                <div class="max-w-sm overflow-hidden rounded">
-                    <div class="px-6 py-4">
-                        <div class="flex items-center">
-                            <i class="text-gray-500 fas fa-location-dot"></i>
-                            <div class="ml-5 text-xl font-bold">Alamat Pengiriman</div>
+            <a href="{{ route('profile.update') }}">
+                <div class="p-6 mb-6 bg-white border-b border-gray-200 hover:bg-green-100">
+                    <div class="max-w-sm overflow-hidden rounded">
+                        <div class="px-6 py-4">
+                            <div class="flex items-center">
+                                <i class="text-gray-500 fas fa-location-dot"></i>
+                                <div class="ml-5 text-xl font-bold">Alamat Pengiriman</div>
+                            </div>
+                            <h5 class="mt-5 ml-8 text-base text-gray-700">
+                                Nama    :
+                            </h5>
+                            <h5 class="mt-1 ml-8 text-base text-gray-700">
+                                Alamat    :
+                            </h5>
                         </div>
-                        <h5 class="mt-5 ml-8 text-base text-gray-700">
-                            Nama    :
-                        </h5>
-                        <h5 class="mt-1 ml-8 text-base text-gray-700">
-                            Alamat    :
-                        </h5>
                     </div>
                 </div>
-            </div>
+            </a>
+            
+            
+            
 
             <div class="mb-5 overflow-hidden bg-white shadow-sm sm:rounded-lg ">
 
