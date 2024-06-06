@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,7 +30,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
-    Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/payment', [OrderController::class, 'payment'])->name('payment');
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+
+
+
+
 
 
 

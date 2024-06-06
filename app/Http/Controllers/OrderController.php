@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Order;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,9 +45,46 @@ class OrderController extends Controller
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully!');
     }
 
-    public function checkout()
-    {
-        return redirect()->route('orders.index')->with('success', 'Checkout successful!');
+
+
+
+    public function payment(Request $request)
+{
+    // Simpan data order di tabel transaksi
+    $orders = $request->user()->orders;
+
+    foreach ($orders as $order) {
+        
+
+        Transaction::create([
+            'user_id' => $order->user_id,
+            'order_id' => $order->id,
+            'book_title' => $order->book_title,
+            'amount' => $order->amount,
+            'unit_price' => $order->unit_price,
+            'total_price' => $order->total_price,
+        ]);
     }
+
+    // Arahkan ke halaman transaksi
+    return redirect()->route('transactions.index')->with('success', 'Payment completed successfully!');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
 
 }

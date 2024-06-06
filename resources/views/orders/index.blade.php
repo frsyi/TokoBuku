@@ -29,7 +29,7 @@
                                 @endphp
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $order->book_title }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->amount }}</td>
+                                    <td class="px-6 py-4 whitespace-nowssrap">{{ $order->amount }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->unit_price, 2) }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->total_price, 2) }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -45,12 +45,13 @@
                     </table>
                     <div class="flex items-center justify-between mt-6">
                         <div class="text-xl font-semibold text-gray-900">Total Payment: Rp{{ number_format($grandTotal, 2) }}</div>
-                        <form action="{{ route('checkout') }}" method="POST">
+                        <form action="{{ route('payment') }}" method="POST">
                             @csrf
                             <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                                Check Out
+                                Lanjutkan pembayaran
                             </button>
                         </form>
+
                     </div>
                 </div>
             </div>

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('amount');
             $table->decimal('unit_price', 8, 2);
             $table->decimal('total_price', 8, 2);
-            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
