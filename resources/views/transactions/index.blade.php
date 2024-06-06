@@ -69,7 +69,13 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
+                            @php
+                                $grandTotal = 0;
+                            @endphp
                             @foreach ($transactions as $transaction)
+                            @php
+                                $grandTotal += $transaction->total_price;
+                            @endphp
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->book_title }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->amount }}</td>
@@ -77,6 +83,15 @@
                                     <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($transaction->total_price, 2) }}</td>
                                 </tr>
                             @endforeach
+                            <tr>
+                                <td colspan="3" class="px-6 py-4 font-bold whitespace-nowrap">Grand Total</td>
+                                <td class="px-6 py-4 font-bold whitespace-nowrap">Rp{{ number_format($grandTotal, 2) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex justify-end">
+                                        <div class="px-2 py-1 font-bold text-white bg-green-500 rounded">Checkout</div>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
 
 
