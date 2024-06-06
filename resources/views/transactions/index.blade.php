@@ -23,10 +23,10 @@
                                 <div class="ml-5 text-xl font-bold">Alamat Pengiriman</div>
                             </div>
                             <h5 class="mt-5 ml-8 text-base text-gray-700">
-                                Nama    :
+                                Nama: {{ Auth::user()->name }}
                             </h5>
                             <h5 class="mt-1 ml-8 text-base text-gray-700">
-                                Alamat    :
+                                Alamat: {{ Auth::user()->address }}
                             </h5>
                         </div>
                     </div>
