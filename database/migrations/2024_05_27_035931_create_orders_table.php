@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->decimal('total_price');
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }
