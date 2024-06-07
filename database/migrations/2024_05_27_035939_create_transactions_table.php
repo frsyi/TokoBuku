@@ -13,13 +13,10 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('book_title');
+            $table->foreignId('book_id')->constrained();
             $table->foreignId('order_id')->constrained();
             $table->integer('amount');
-            $table->decimal('unit_price', 8, 2)->default(0.00);
-            $table->decimal('total_price', 8, 2);
-            $table->string('status')->nullable();
-            $table->string('tracking_number')->nullable();
+            $table->decimal('total_price');
             $table->timestamps();
         });
     }
