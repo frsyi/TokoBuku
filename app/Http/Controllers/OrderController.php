@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Order;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,78 +14,99 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::all();
-        return view('orders.index', compact('orders'));
+        return view('order.create', compact('orders'));
     }
 
-
-    public function store(Request $request)
+    public function show($id)
     {
-        // Validasi request
-        $request->validate([
-            'book_id' => 'required|exists:books,id',
-        ]);
-
-        // Temukan buku berdasarkan ID
-        $book = Book::findOrFail($request->book_id);
-
-        // Buat order baru
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'book_title' => $book->title,
-            'amount' => 1, // Asumsikan satu buku per order, Anda bisa tambahkan fitur jumlah jika diperlukan
-            'unit_price' => $book->price,
-            'total_price' => $book->price * 1,
-        ]);
-
-        return redirect()->route('orders.index')->with('success', 'Order created successfully!');
+        $book = Book::where('id', $id)->first();
+        return view('order.index', compact('book'));
     }
 
-    public function destroy(Order $order)
+    public function store(Request $request, $id)
     {
-        $order->delete();
-        return redirect()->route('orders.index')->with('success', 'Order deleted successfully!');
+        $book = Book::find($id);
+        $order_date = Carbon::now();
+
+        //cek validasi
+        $check_order = Order::where('user_id', Auth::user()->id)->where('status', 0)->first();
+
+        //simpan ke database order
+        if (empty($check_order)) {
+            $order = new Order();
+            $order->user_id = Auth::user()->id;
+            $order->created_at = $order_date;
+            $order->total_price = 0;
+            $order->status = 0;
+            $order->save();
+        }
+
+        //simpan ke database transaction
+        $new_order = Order::where('user_id', Auth::user()->id)->where('status', 0)->first();
+
+        //cek transaction
+        $check_transaction = Transaction::where('book_id', $book->id)->where('order_id', $new_order->id)->first();
+        if (empty($check_transaction)) {
+            $transaction = new Transaction();
+            $transaction->book_id = $book->id;
+            $transaction->order_id = $new_order->id;
+            $transaction->amount = $request->amount;
+            $transaction->total_price = $book->price * $request->amount;
+            $transaction->save();
+        } else {
+            $transaction = Transaction::where('book_id', $book->id)->where('order_id', $new_order->id)->first();
+            $transaction->amount = $transaction->amount + $request->amount;
+
+            //harga sekarang
+            $new_transaction_price = $book->price * $request->amount;
+            $transaction->total_price = $transaction->total_price + $new_transaction_price;
+            $transaction->update();
+        }
+
+        //jumlah total
+        // Recalculate the total price from the transactions
+        $total_price = Transaction::where('order_id', $new_order->id)->sum('total_price');
+        $order = Order::where('user_id', Auth::user()->id)->where('status', 0)->first();
+        $order->total_price = $total_price;
+        $order->update();
+
+        // Tambahkan pesan sukses ke session
+        return redirect()->route('dashboard')->with('success', 'Order created successfully!');
     }
 
 
+    public function destroy($id)
+    {
+        $transaction = Transaction::where('id', $id)->first();
 
+        $order = Order::where('id', $transaction->order_id)->first();
+        $order->total_price = $order->total_price - $transaction->total_price;
+        $order->update();
+
+        $transaction->delete();
+
+        return redirect()->route('transactions.index')->with('success', 'Order deleted successfully!');
+    }
 
     public function payment(Request $request)
-{
-    // Simpan data order di tabel transaksi
-    $orders = $request->user()->orders;
+    {
+        // Simpan data order di tabel transaksi
+        $orders = $request->user()->orders;
 
-    foreach ($orders as $order) {
-        
+        foreach ($orders as $order) {
 
-        Transaction::create([
-            'user_id' => $order->user_id,
-            'order_id' => $order->id,
-            'book_title' => $order->book_title,
-            'amount' => $order->amount,
-            'unit_price' => $order->unit_price,
-            'total_price' => $order->total_price,
-        ]);
+
+            Transaction::create([
+                'user_id' => $order->user_id,
+                'order_id' => $order->id,
+                // 'book_title' => $order->book_title,
+                'amount' => $order->amount,
+                // 'unit_price' => $order->unit_price,
+                'total_price' => $order->total_price,
+            ]);
+        }
+
+        // Arahkan ke halaman transaksi
+        return redirect()->route('transactions.index')->with('success', 'Payment completed successfully!');
     }
-
-    // Arahkan ke halaman transaksi
-    return redirect()->route('transactions.index')->with('success', 'Payment completed successfully!');
-}
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
 }

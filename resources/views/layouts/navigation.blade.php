@@ -1,3 +1,8 @@
+<?php
+use App\Models\Order;
+use App\Models\Transaction;
+?>
+
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -37,8 +42,12 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @auth
                     @can('buyer')
-                        <a href="{{ route('order.index') }}" class="inline-flex items-center px-3 py-2 ml-4 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
-                            <i class="fas fa-shopping-cart"></i>
+                        <?php
+                        $main_order = Order::where('user_id', Auth::user()->id)->where('status', 0)->first();
+                        $notif = $main_order ? Transaction::where('order_id', $main_order->id)->count() : 0;
+                        ?>
+                        <a href="{{ route('transactions.index') }}" class="inline-flex items-center px-3 py-2 ml-4 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+                            <i class="fas fa-shopping-cart"></i><span class="badge badge-danger">{{ $notif }}</span>
                         </a>
                     @endcan
                 @endauth

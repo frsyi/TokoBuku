@@ -26,6 +26,6 @@ class CatalogueController extends Controller
         // Mengambil hasil pencarian dengan pagination
         $books = $query->orderBy('title')->paginate(10)->withQueryString();
 
-        return view('catalogue.index', compact('books'));
+        return view('dashboard', compact('books'));
     }
 }
