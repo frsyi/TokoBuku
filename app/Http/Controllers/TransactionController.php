@@ -22,5 +22,10 @@ class TransactionController extends Controller
     //     return view('transactions.index', compact('transactions'));
     // }
 
+    public function history()
+    {
+        return view('transactions.history'); // Menampilkan view transactions.history
+    }
+
 
 }

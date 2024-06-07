@@ -31,8 +31,8 @@ use App\Models\Transaction;
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('catalogue.index')" :active="request()->routeIs('catalogue')">
-                        {{ __('Catalogue') }}
+                    <x-nav-link :href="route('transactions.history')" :active="request()->routeIs('transactions.history')">
+                        {{ __('History') }}
                     </x-nav-link>
                     @endif
                 </div>
@@ -111,8 +111,8 @@ use App\Models\Transaction;
                 {{ __('Category') }}
             </x-responsive-nav-link>
             @else
-            <x-responsive-nav-link :href="route('catalogue.index')" :active="request()->routeIs('catalogue.*')">
-                {{ __('Catalogue') }}
+            <x-responsive-nav-link :href="route('transactions.history')" :active="request()->routeIs('transactions.history*')">
+                {{ __('History') }}
             </x-responsive-nav-link>
             @endif
         </div>

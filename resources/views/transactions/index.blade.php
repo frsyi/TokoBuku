@@ -147,7 +147,7 @@
         showAlert('Terima kasih! Pesanan Anda sedang diproses.');
         // Setelah alert muncul, kembali ke halaman dashboard
         setTimeout(function() {
-            window.location.href = "{{ route('dashboard') }}";
+            window.location.href = "{{ route('transactions.history') }}";
         }, 3000); // Tunggu 3 detik sebelum kembali
     });
 

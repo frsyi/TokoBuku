@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/order/{id}', [OrderController::class, 'destroy'])->name('order.destroy');
     Route::post('/payment', [OrderController::class, 'payment'])->name('payment');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
+
 });
 
 
