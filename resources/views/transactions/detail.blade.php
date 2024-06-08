@@ -46,6 +46,26 @@
                         <h3 class="text-lg font-semibold">{{ __('Total Price') }}</h3>
                         <p>Rp. {{ number_format($order->total_price, 2) }}</p>
                     </div>
+
+                    <!-- Nomor Resi -->
+                    @if(Auth::user()->is_admin)
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold">{{ __('Tracking Number') }}</h3>
+                            <form method="POST" action="">
+                                @csrf
+                                <div class="flex items-center">
+                                    <input type="text" name="tracking_number" id="tracking_number" class="w-full form-input" value="" required>
+                                    <button type="submit" class="ml-4 btn btn-primary">{{ __('Update') }}</button>
+                                </div>
+                            </form>
+                        </div>
+                    @else
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold">{{ __('Tracking Number') }}</h3>
+                            <p></p>
+                        </div>
+                    @endif
+
                 </div>
             </div>
         </div>
