@@ -71,14 +71,25 @@
                                                     </div>
                                                     <div class="mt-4">
                                                         <p class="font-bold card-text">Rp{{ number_format($book->price, 2) }}</p>
-                                                        <form action="{{ route('order.index', $book->id) }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                                            <x-order-button :href="route('order.show', ['id' => $book->id])" class="nav-link">
-                                                                <i class="fas fa-shopping-cart"></i>
-                                                            </x-order-button>
-                                                        </form>
+                                                        @auth
+                                                            @if(auth()->user()->is_admin)
+                                                                <form action="{{ route('order.index', $book->id) }}" method="POST">
+                                                                    @csrf
+                                                                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+                                                                </form>
+                                                                @else
+                                                                <form action="{{ route('order.index', $book->id) }}" method="POST">
+                                                                    @csrf
+                                                                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+                                                                    <x-order-button :href="route('order.show', ['id' => $book->id])" class="nav-link">
+                                                                        <i class="fas fa-shopping-cart"></i>
+                                                                    </x-order-button>
+                                                                </form>
+
+                                                            @endif
+                                                        @endauth
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
