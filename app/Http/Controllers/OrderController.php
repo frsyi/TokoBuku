@@ -116,4 +116,34 @@ class OrderController extends Controller
         $order = Order::with('user', 'transactions.book')->findOrFail($id);
         return view('transactions.detail', compact('order'));
     }
+
+
+
+
+
+
+
+
+    public function complete(Order $order)
+    {
+        if (auth()->user()->id == $order->user_id) {
+            $order->update(['is_complete' => true]);
+            return redirect()->route('transactions.history')->with('success', 'Order marked as complete!');
+        }
+
+        return redirect()->route('transactions.history')->with('danger', 'You are not authorized to complete this!');
+    }
+
+    public function uncomplete(Order $order)
+    {
+        if (auth()->user()->id == $order->user_id) {
+            $order->update([
+                'is_complete' => false,
+            ]);
+
+            return redirect()->route('transactions.history')->with('success', 'uncompleted successfully!');
+        }
+
+        return redirect()->route('transactions.history')->with('danger', 'You are not authorized to uncomplete this!');
+    }
 }

@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
+    Route::patch('/order/{order}/complete', [OrderController::class, 'complete'])->name('order.complete');
+    Route::patch('/order/{order}/incomplete', [OrderController::class, 'uncomplete'])->name('order.uncomplete');
 });
 
 

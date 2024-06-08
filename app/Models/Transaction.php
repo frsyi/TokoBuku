@@ -10,13 +10,18 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'book_title',
-        'order_id',
-        'amount',
-        'total_price',
-        'tracking_number',
+    protected $casts = [
+        'is_complete' => 'boolean',
     ];
+
+
+    // protected $fillable = [
+    //     'book_title',
+    //     'order_id',
+    //     'amount',
+    //     'total_price',
+    //     'tracking_number',
+    // ];
 
     public function book(): BelongsTo
     {
