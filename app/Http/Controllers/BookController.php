@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use App\Models\Book;
 use App\Models\Category;
 
@@ -29,24 +30,45 @@ class BookController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category_id' => 'nullable|exists:categories,id',
-            'title' => 'required|max:255',
-            'author' => 'required|max:255',
-            'publication_year' => 'required|max:4',
-            'price' => 'required|numeric',
-            'description' => 'required',
-            'image' => 'required|image|file|max:2048',
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'publication_year' => 'required|integer',
+            'price' => 'required|integer',
+            'description' => 'required|string',
+            'category_id' => 'required|integer',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $book = new Book($request->all());
+        $book = new Book();
+        $book->title = $request->title;
+        $book->author = $request->author;
+        $book->publication_year = $request->publication_year;
+        $book->price = $request->price;
+        $book->description = $request->description;
+        $book->category_id = $request->category_id;
 
-        if ($request->hasFile('image')) {
-            $book->image = $request->file('image')->store('images', 'public');
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            Log::info('File is valid and present.');
+
+            try {
+                $file = $request->file('image');
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $destinationPath = public_path('storage/images');
+                $file->move($destinationPath, $fileName);
+                Log::info('File moved to: ' . $destinationPath . '/' . $fileName);
+                $book->image = 'images/'.$fileName;
+            } catch (\Exception $e) {
+                Log::error('File storage error: ' . $e->getMessage());
+                return back()->withErrors(['image' => 'File storage error: ' . $e->getMessage()]);
+            }
+        } else {
+            Log::error('File is not valid or not present.');
+            return back()->withErrors(['image' => 'Invalid file upload.']);
         }
 
         $book->save();
 
-        return redirect()->route('book.index')->with('success', 'Book created successfully!');
+        return redirect()->route('book.index')->with('success', 'Book created successfully.');
     }
 
     public function edit(Book $book)
