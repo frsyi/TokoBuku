@@ -11,34 +11,29 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        if (Auth::check() && Auth::user()->role == 'is_admin') {
-            // Jika admin, ambil semua transaksi
-            $transactions = Transaction::all();
-        } else {
-            // Jika bukan admin, ambil transaksi berdasarkan user yang sedang login
-            $transactions = Transaction::whereHas('order', function($query) {
-                $query->where('user_id', Auth::user()->id);
-            })->get();
-        }
-
-        // Mengirimkan data transaksi ke view transactions.index
-        return view('transactions.index', compact('transactions'));
+        $order = Order::where('user_id', Auth::user()->id)->where('status', 0)->first();
+        $transactions = Transaction::where('order_id', $order->id)->get();
+        return view('transactions.index', compact('order', 'transactions'));
     }
-    //     public function index()
-    // {
-    //     $transactions = Transaction::with('book', 'order')->get();
-    //     return view('transactions.index', compact('transactions'));
-    // }
+
 
     public function history()
     {
-        $transactions = Transaction::whereHas('order', function($query) {
-            $query->where('user_id', Auth::user()->id);
-        })->get();
+        if (Auth::user()->is_admin) {
+            // Jika admin, ambil semua order
+            $orders = Order::with('user', 'transactions')->get();
+        } else {
+            // Jika bukan admin, ambil order berdasarkan user yang sedang login
+            $orders = Order::with('transactions')->where('user_id', Auth::user()->id)->get();
+        }
 
-        // Menampilkan view transactions.history dengan data histories
-        return view('transactions.history', compact('transactions'));
+        return view('transactions.history', compact('orders'));
     }
 
-
+    public function show($id)
+    {
+        // Memuat relasi dengan user dan transactions.book untuk halaman detail
+        $order = Order::with('user', 'transactions.book')->findOrFail($id);
+        return view('transactions.show', compact('order'));
+    }
 }

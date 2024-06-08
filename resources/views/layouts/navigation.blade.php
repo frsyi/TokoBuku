@@ -28,7 +28,7 @@ use App\Models\Transaction;
                         {{ __('Category') }}
                     </x-nav-link>
                     <x-nav-link :href="route('transactions.history')" :active="request()->routeIs('transactions.history')">
-                        {{ __('History') }}
+                        {{ __('Transaction') }}
                     </x-nav-link>
                     @else
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">

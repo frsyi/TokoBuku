@@ -1,66 +1,53 @@
-<head>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Transaction History') }}
+            {{ __('Transactions History') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-
-
-            <div class="mb-6 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
+            <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
+                <div class="relative overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">ID Order</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Product</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Quantity</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Total Price</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Tracker Number</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
+                                <th scope="col" class="px-6 py-3">No</th>
+                                <th scope="col" class="px-6 py-3">ID Order</th>
+                                <th scope="col" class="px-6 py-3">Order Date</th>
+                                @if(Auth::check() && Auth::user()->is_admin)
+                                    <th scope="col" class="px-6 py-3">Name</th>
+                                @endif
+                                <th scope="col" class="px-6 py-3">Item Count</th>
+                                <th scope="col" class="px-6 py-3">Total Price</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3">Confirmation</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                             <?php $no = 1; ?>
-                            @forelse ($transactions as $transaction)
-                            <tr>
-                                @if(Auth::check() && Auth::user()->role == 'admin')
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->order_id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->created_at }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->updated_at }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->payment_method }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($transaction->total_price, 2) }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->payment_status }}</td>
-                                @else
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->order_id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->created_at }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap"></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($transaction->total_price, 2) }}</td>
-                                    <td></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->payment_status }}</td>
+                            @forelse ($orders as $order)
+                            <tr class="bg-white dark:bg-gray-800">
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $no++ }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->created_at }}</td>
+                                @if(Auth::check() && Auth::user()->is_admin)
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->user->name }}</td>
                                 @endif
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->transactions->sum('amount') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">Rp. {{ number_format($order->total_price, 2) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->status ? 'Completed' : 'Pending' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->status ? 'Received' : 'Not Received' }}</td>
                             </tr>
-
-                        @empty
-                            <tr>
-                                <td colspan="7" class="px-6 py-4 whitespace-nowrap">No transactions found</td>
+                            @empty
+                            <tr class="bg-white dark:bg-gray-800">
+                                <td colspan="8" class="px-6 py-4 text-center whitespace-nowrap">No transactions found</td>
                             </tr>
-                        @endforelse
-
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-
 </x-app-layout>
