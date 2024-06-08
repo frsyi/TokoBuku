@@ -109,4 +109,11 @@ class OrderController extends Controller
         // Arahkan ke halaman transaksi
         return redirect()->route('transactions.index')->with('success', 'Payment completed successfully!');
     }
+
+    public function detail($id)
+    {
+        // Memuat relasi dengan user dan transactions.book untuk halaman detail
+        $order = Order::with('user', 'transactions.book')->findOrFail($id);
+        return view('transactions.detail', compact('order'));
+    }
 }

@@ -29,11 +29,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/order', [OrderController::class, 'index'])->name('order.index');
     Route::get('order/{id}', [OrderController::class, 'show'])->name('order.show');
+    Route::get('order/detail/{id}', [OrderController::class, 'detail'])->name('order.detail');
     Route::post('/order/store/{id}', [OrderController::class, 'store'])->name('order.store');
-
-    // Route::post('/order', [OrderController::class, 'store'])->name('order.store');
     Route::delete('/order/{id}', [OrderController::class, 'destroy'])->name('order.destroy');
+
     Route::post('/payment', [OrderController::class, 'payment'])->name('payment');
+
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
 });

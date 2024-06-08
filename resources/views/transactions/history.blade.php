@@ -20,6 +20,9 @@
                                 @endif
                                 <th scope="col" class="px-6 py-3">Item Count</th>
                                 <th scope="col" class="px-6 py-3">Total Price</th>
+                                @if(!Auth::check() || !Auth::user()->is_admin)
+                                    <th scope="col" class="px-6 py-3">Tracking Number</th>
+                                @endif
                                 <th scope="col" class="px-6 py-3">Status</th>
                                 <th scope="col" class="px-6 py-3">Confirmation</th>
                             </tr>
@@ -27,7 +30,7 @@
                         <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                             <?php $no = 1; ?>
                             @forelse ($orders as $order)
-                            <tr class="bg-white dark:bg-gray-800">
+                            <tr class="bg-white cursor-pointer dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="window.location='{{ route('order.detail', $order->id) }}'">
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $no++ }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $order->id }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $order->created_at }}</td>
@@ -36,6 +39,9 @@
                                 @endif
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $order->transactions->sum('amount') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">Rp. {{ number_format($order->total_price, 2) }}</td>
+                                @if(!Auth::check() || !Auth::user()->is_admin)
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->tracking_number }}</td>
+                                @endif
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $order->status ? 'Completed' : 'Pending' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $order->status ? 'Received' : 'Not Received' }}</td>
                             </tr>

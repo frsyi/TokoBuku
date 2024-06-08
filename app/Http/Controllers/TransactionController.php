@@ -29,11 +29,4 @@ class TransactionController extends Controller
 
         return view('transactions.history', compact('orders'));
     }
-
-    public function show($id)
-    {
-        // Memuat relasi dengan user dan transactions.book untuk halaman detail
-        $order = Order::with('user', 'transactions.book')->findOrFail($id);
-        return view('transactions.show', compact('order'));
-    }
 }
