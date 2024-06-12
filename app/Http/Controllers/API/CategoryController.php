@@ -93,16 +93,88 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
-    {
-        //
+    public function update(Request $request, $id)
+{
+    try {
+        $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Category not found.',
+            ], 404);
+        }
+
+        $request->validate([
+            'name' => 'required|max:255',
+        ]);
+
+        $category->update([
+            'name' => ucfirst($request->name),
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Category updated successfully.',
+            'data' => [
+                'category' => $category,
+            ]
+        ]);
+    } catch (ValidationException $exception) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Validation failed',
+            'errors' => $exception->errors(),
+        ], 422);
+    } catch (\Exception $exception) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to update category. Please try again later.',
+            'error' => $exception->getMessage(),
+        ], 500);
     }
+}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
-    {
-        //
+    public function destroy($id)
+{
+    try {
+        $user = auth()->user();
+
+        // Validasi hanya untuk pengguna dengan ID 1
+        if ($user->id !== 1) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You are not authorized to perform this action.',
+            ], 403);
+        }
+
+        // Ambil kategori berdasarkan ID tanpa memeriksa 'user_id'
+        $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Category not found.',
+            ], 404);
+        }
+
+        // Hapus kategori
+        $category->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Category deleted successfully.',
+        ]);
+    } catch (\Exception $exception) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to delete category. Please try again later.',
+            'error' => $exception->getMessage(),
+        ], 500);
     }
+}
+
 }
