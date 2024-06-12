@@ -26,7 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::apiResource('/book', BookController::class);
-
-    Route::get('/category',[CategoryController::class, 'index'])->name('category.index');
-
+    Route::apiResource('/category', CategoryController::class);
 });

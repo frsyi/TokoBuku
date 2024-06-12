@@ -4,8 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
 {
@@ -26,9 +28,9 @@ class CategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
     }
 
     /**
@@ -36,7 +38,40 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $user = auth()->user();
+
+            // Validasi hanya untuk pengguna dengan ID 1
+            if ($user->id !== 1) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'You are not authorized to perform this action.',
+                ], 403);
+            }
+
+            $request->validate([
+                'name' => 'required|max:255',
+            ]);
+
+            $category = Category::create([
+                'name' => ucfirst($request->name),
+                'user_id' => $user->id,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Category created',
+                'data' => [
+                    'category' => $category,
+                ]
+            ], 201);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $exception->errors(),
+            ], 422);
+        }
     }
 
     /**
