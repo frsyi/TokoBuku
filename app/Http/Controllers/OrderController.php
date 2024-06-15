@@ -117,12 +117,18 @@ class OrderController extends Controller
         return view('transactions.detail', compact('order'));
     }
 
+    public function updateTrackingNumber(Request $request, $id)
+    {
+        $request->validate([
+            'tracking_number' => 'required|string|max:255',
+        ]);
 
+        $order = Order::findOrFail($id);
+        $order->tracking_number = $request->tracking_number;
+        $order->save();
 
-
-
-
-
+        return redirect()->route('order.detail', $id)->with('success', 'Tracking number updated successfully!');
+    }
 
     public function complete(Order $order)
     {

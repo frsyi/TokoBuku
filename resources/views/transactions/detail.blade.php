@@ -1,4 +1,3 @@
-<!-- resources/views/transactions/detail.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
@@ -51,10 +50,10 @@
                     @if(Auth::user()->is_admin)
                         <div class="mt-6">
                             <h3 class="text-lg font-semibold">{{ __('Tracking Number') }}</h3>
-                            <form method="POST" action="{{ route('transactions.updateTrackingNumber', $order->id) }}">
+                            <form method="POST" action="{{ route('order.updateTrackingNumber', $order->id) }}">
                                 @csrf
                                 <div class="flex items-center">
-                                    <input type="text" name="tracking_number" id="tracking_number" class="w-full form-input" value="{{ $order->tracking_number }}" required>
+                                    <input type="text" name="tracking_number" id="tracking_number" class="block mt-2 text-white bg-gray-700 form-input" value="{{ $order->tracking_number }}" required autofocus />
                                     <button type="submit" class="ml-4 btn btn-primary">{{ __('Update') }}</button>
                                 </div>
                             </form>
@@ -62,10 +61,9 @@
                     @else
                         <div class="mt-6">
                             <h3 class="text-lg font-semibold">{{ __('Tracking Number') }}</h3>
-                            <p></p>
+                            <p>{{ $order->tracking_number }}</p>
                         </div>
                     @endif
-
                 </div>
             </div>
         </div>

@@ -38,7 +38,7 @@
                         </div>
                         <div class="mb-6">
                             <x-input-label for="description" :value="__('Description')" />
-                            <textarea id="description" name="description" class="block w-full mt-1" required>{{ old('description') }}</textarea>
+                            <x-textarea id="description" name="description" class="block w-full mt-1" required>{{ old('description') }}</x-textarea>
                             <x-input-error class="mt-2" :messages="$errors->get('description')" />
                         </div>
                         <div class="mb-6">

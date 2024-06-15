@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get('order/detail/{id}', [OrderController::class, 'detail'])->name('order.detail');
     Route::post('/order/store/{id}', [OrderController::class, 'store'])->name('order.store');
     Route::delete('/order/{id}', [OrderController::class, 'destroy'])->name('order.destroy');
+    Route::post('/order/{id}/tracking', [OrderController::class, 'updateTrackingNumber'])->name('order.updateTrackingNumber');
     Route::patch('/order/{order}/complete', [OrderController::class, 'complete'])->name('order.complete');
     Route::patch('/order/{order}/incomplete', [OrderController::class, 'uncomplete'])->name('order.uncomplete');
 
@@ -39,7 +40,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
-    Route::post('/transactions/{id}/tracking', [TransactionController::class, 'updateTrackingNumber'])->name('transactions.updateTrackingNumber');
 });
 
 
