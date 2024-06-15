@@ -51,10 +51,10 @@
                     @if(Auth::user()->is_admin)
                         <div class="mt-6">
                             <h3 class="text-lg font-semibold">{{ __('Tracking Number') }}</h3>
-                            <form method="POST" action="">
+                            <form method="POST" action="{{ route('transactions.updateTrackingNumber', $order->id) }}">
                                 @csrf
                                 <div class="flex items-center">
-                                    <input type="text" name="tracking_number" id="tracking_number" class="w-full form-input" value="" required>
+                                    <input type="text" name="tracking_number" id="tracking_number" class="w-full form-input" value="{{ $order->tracking_number }}" required>
                                     <button type="submit" class="ml-4 btn btn-primary">{{ __('Update') }}</button>
                                 </div>
                             </form>

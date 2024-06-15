@@ -16,7 +16,15 @@ class Order extends Model
         'book_title',
         'amount',
         'unit_price',
-        'total_price'
+        'total_price',
+        'tracking_number',
+        'order_status',
+        'confirmation',
+    ];
+
+    protected $casts = [
+        'order_status' => 'boolean',
+        'confirmation' => 'boolean',
     ];
 
     public function user(): BelongsTo

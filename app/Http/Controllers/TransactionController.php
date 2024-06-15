@@ -29,4 +29,17 @@ class TransactionController extends Controller
 
         return view('transactions.history', compact('orders'));
     }
+
+    public function updateTrackingNumber(Request $request, $id)
+    {
+        $request->validate([
+            'tracking_number' => 'required|string|max:255',
+        ]);
+
+        $order = Order::findOrFail($id);
+        $order->tracking_number = $request->tracking_number;
+        $order->save();
+
+        return redirect()->route('transactions.show', $id)->with('success', 'Tracking number updated successfully!');
+    }
 }
