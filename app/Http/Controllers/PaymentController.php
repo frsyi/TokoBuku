@@ -16,9 +16,19 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Payment::all();
-        return view('payment.create', compact('payments'));
+        $payment = Payment::where('user_id', Auth::user()->id)
+            ->where('status', 0)
+            ->first();
+
+        if (!$payment) {
+            // Tidak ada pembayaran aktif, Anda dapat mengembalikan pesan atau mengarahkan pengguna ke halaman lain
+            return redirect()->route('dashboard')->with('error', 'Tidak ada pembayaran aktif.');
+        }
+
+        $orders = Order::where('payment_id', $payment->id)->get();
+        return view('payment.create', compact('payment', 'orders'));
     }
+
 
     /**
      * Show the form for creating a new resource.

@@ -35,7 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/payment/{order}/complete', [PaymentController::class, 'complete'])->name('payment.complete');
     Route::patch('/payment/{order}/incomplete', [PaymentController::class, 'uncomplete'])->name('payment.uncomplete');
 
-    Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
 
     Route::get('/order', [OrderController::class, 'index'])->name('order.index');
     Route::get('/order/history', [OrderController::class, 'history'])->name('order.history');
