@@ -2,76 +2,172 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+<style>
+    /* CSS untuk alert */
+    #alertBox {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+</style>
 
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Order') }}
+            {{ __('Transaction') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                <div class="flex flex-col p-6 text-gray-900 dark:text-gray-100 md:flex-row">
-                    <div class="mb-4 md:w-1/4 md:mb-0">
-                        @if ($book->image)
-                            <img src="{{ asset('storage/' . $book->image) }}" alt="{{ $book->title }}" class="w-full h-auto rounded-md" style="max-width: 200px;">
-                        @else
-                            <img src="{{ asset('images/default_book_image.jpg') }}" alt="{{ $book->title }}" class="w-full h-auto rounded-md" style="max-width: 200px;">
-                        @endif
+
+            <a href="{{ route('profile.update') }}">
+                <div class="p-6 mb-6 bg-white border-b border-gray-200 hover:bg-green-100">
+                    <div class="max-w-sm overflow-hidden rounded">
+                        <div class="px-6 py-4">
+                            <div class="flex items-center">
+                                <i class="text-gray-500 fas fa-location-dot"></i>
+                                <div class="ml-5 text-xl font-bold">Alamat Pengiriman</div>
+                            </div>
+                            <h5 class="mt-5 ml-8 text-base text-gray-700">
+                                Nama: {{ Auth::user()->name }}
+                            </h5>
+                            <h5 class="mt-1 ml-8 text-base text-gray-700">
+                                Alamat: {{ Auth::user()->address }}
+                            </h5>
+                        </div>
                     </div>
-                    <div class="md:w-3/4 md:pl-6">
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $book->title }}</h1>
-                        <table class="table mt-3">
-                            <tbody>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Author</td>
-                                    <td class="px-2">:</td>
-                                    <td>{{ $book->author }}</td>
+                </div>
+            </a>
+
+            <div class="mb-6 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                            <tr>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">ID Order</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">No Rekening</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $orders->first()->payment->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $orders->first()->payment->created_at->format('Y-m-d') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $orders->first()->status }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">0166-01-020870-53-8</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mb-6 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                            <tr>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">No</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Title</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Count</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Price</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Total Price</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <?php $no = 1; ?>
+                            @foreach ($orders as $order)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $no++ }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->book->title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->count }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->book->price, 2) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->total_price, 2) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <form action="{{ route('payment.destroy', $order->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                                <button type="submit" class="text-red-600 dark:text-red-400">
+                                                    <x-heroicon-o-trash class="w-6 h-6"/>
+                                                </button>
+                                        </form>
+                                    </td>
                                 </tr>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Publication Year</td>
-                                    <td class="px-2">:</td>
-                                    <td>{{ $book->publication_year }}</td>
-                                </tr>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Category</td>
-                                    <td class="px-2">:</td>
-                                    <td>{{ $book->category->name ?? 'N/A' }}</td>
-                                </tr>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Price</td>
-                                    <td class="px-2">:</td>
-                                    <td>Rp{{ number_format($book->price, 2) }}</td>
-                                </tr>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Description</td>
-                                    <td class="px-2">:</td>
-                                    <td>{{ $book->description }}</td>
-                                </tr>
-                                <form action="{{ route('order.store', $book->id) }}" method="POST">
-                                    @csrf
-                                    <tr>
-                                        <td class="font-bold text-gray-900 dark:text-gray-100">Jumlah Pesan</td>
-                                        <td class="px-2">:</td>
-                                        <td>
-                                            <x-text-input id="amount" name="amount" type="number" min="1" class="block mt-2" required autofocus autocomplete="amount" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                            <x-primary-button class="mt-5 nav-link">
-                                                <i class="fas fa-shopping-cart"></i> Order
-                                            </x-primary-button>
-                                        </td>
-                                    </tr>
-                                </form>
-                            </tbody>
-                        </table>
+                            @endforeach
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 font-bold whitespace-nowrap">Grand Total</td>
+                                <td class="px-6 py-4 font-bold whitespace-nowrap">Rp{{ number_format($payment->total_price, 2) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex justify-end">
+                                        <button id="checkoutBtn" type="button" class="px-4 py-2 font-bold text-white bg-green-500 rounded">
+                                            Checkout
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="alertBox"></div>
+            <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+                <div class="p-8 bg-white rounded shadow-lg">
+                    <p class="mb-4">Apakah Anda sudah membayar?</p>
+                    <div class="flex justify-end">
+                        <button id="yesBtn" class="px-4 py-2 mr-4 text-white bg-green-500 rounded">Ya</button>
+                        <button id="noBtn" class="px-4 py-2 text-white bg-red-500 rounded">Tidak</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- JavaScript for checkout confirmation -->
+    <script>
+        // JavaScript untuk checkout confirmation
+        var checkoutBtn = document.getElementById('checkoutBtn');
+        var checkoutModal = document.getElementById('checkoutModal');
+        var yesBtn = document.getElementById('yesBtn');
+        var noBtn = document.getElementById('noBtn');
+
+        checkoutBtn.addEventListener('click', function() {
+        checkoutModal.classList.remove('hidden');
+    });
+
+    yesBtn.addEventListener('click', function() {
+        checkoutModal.classList.add('hidden');
+        showAlert('Terima kasih! Pesanan Anda sedang diproses.');
+        // Setelah alert muncul, kembali ke halaman dashboard
+        setTimeout(function() {
+            window.location.href = "{{ route('order.history') }}";
+        }, 3000); // Tunggu 3 detik sebelum kembali
+    });
+
+    noBtn.addEventListener('click', function() {
+        checkoutModal.classList.add('hidden');
+        showAlert('Silakan selesaikan pembayaran Anda sebelum melanjutkan.');
+        // Setelah alert muncul, kembali ke halaman dashboard
+        setTimeout(function() {
+            window.location.href = "{{ route('dashboard') }}";
+        }, 3000); // Tunggu 3 detik sebelum kembali
+    });
+
+    // Function untuk menampilkan alert
+    function showAlert(message) {
+        var alertBox = document.getElementById('alertBox');
+        alertBox.innerText = message;
+        alertBox.style.display = 'block';
+        setTimeout(function() {
+            alertBox.style.display = 'none';
+        }, 3000); // Durasi alert muncul (ms)
+    }
+    </script>
 </x-app-layout>

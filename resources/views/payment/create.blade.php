@@ -13,7 +13,7 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Title</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Amount</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Count</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Unit Price</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Total Price</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Action</th>
@@ -23,17 +23,17 @@
                             @php
                                 $grandTotal = 0;
                             @endphp
-                            @foreach ($orders as $order)
+                            @foreach ($payments as $payment)
                                 @php
-                                    $grandTotal += $order->total_price;
+                                    $grandTotal += $payment->total_price;
                                 @endphp
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->book_title }}</td>
-                                    <td class="px-6 py-4 whitespace-nowssrap">{{ $order->amount }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->unit_price, 2) }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->total_price, 2) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $payment->book_title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowssrap">{{ $payment->count }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($payment->unit_price, 2) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($payment->total_price, 2) }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
+                                        <form action="{{ route('payment.destroy', $payment->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>

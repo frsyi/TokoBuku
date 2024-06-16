@@ -1,3 +1,8 @@
+<head>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
@@ -29,26 +34,26 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                             <?php $no = 1; ?>
-                            @forelse ($orders as $order)
-                            <tr class="bg-white cursor-pointer dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="window.location='{{ route('order.detail', $order->id) }}'">
+                            @forelse ($payments as $payment)
+                            <tr class="bg-white cursor-pointer dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="window.location='{{ route('payment.detail', $payment->id) }}'">
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $no++ }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->created_at }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $payment->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $payment->created_at }}</td>
 
 
                                 @if(Auth::check() && Auth::user()->is_admin)
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->user->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $payment->user->name }}</td>
                                 @endif
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->transactions->sum('amount') }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">Rp. {{ number_format($order->total_price, 2) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $payment->orders->sum('count') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">Rp. {{ number_format($payment->total_price, 2) }}</td>
 
 
                                 @if(!Auth::check() || !Auth::user()->is_admin)
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->tracking_number }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $payment->tracking_number }}</td>
                                 @endif
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                @if ($order->is_complete == false)
-                                    <form action="{{ route('order.complete', $order) }}" method="Post">
+                                @if ($payment->is_complete == false)
+                                    <form action="{{ route('payment.complete', $payment) }}" method="Post">
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit" class="text-green-600 dark:text-green-400">
@@ -56,7 +61,7 @@
                                         </button>
                                     </form>
                                 @else
-                                    <form action="{{ route('order.uncomplete', $todo) }}" method="Post">
+                                    <form action="{{ route('payment.uncomplete', $todo) }}" method="Post">
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit" class="text-blue-600 dark:text-blue-400">
@@ -66,7 +71,7 @@
                                 @endif
 
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->status ? 'Received' : 'Not Received' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $payment->status ? 'Received' : 'Not Received' }}</td>
                             </tr>
                             @empty
                             <tr class="bg-white dark:bg-gray-800">
