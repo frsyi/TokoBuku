@@ -12,64 +12,93 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                <div class="flex flex-col p-6 text-gray-900 dark:text-gray-100 md:flex-row">
-                    <div class="mb-4 md:w-1/4 md:mb-0">
-                        @if ($book->image)
-                            <img src="{{ asset('storage/' . $book->image) }}" alt="{{ $book->title }}" class="w-full h-auto rounded-md" style="max-width: 200px;">
-                        @else
-                            <img src="{{ asset('images/default_book_image.jpg') }}" alt="{{ $book->title }}" class="w-full h-auto rounded-md" style="max-width: 200px;">
-                        @endif
+
+            <a href="{{ route('profile.update') }}">
+                <div class="p-6 mb-6 bg-white border-b border-gray-200 hover:bg-green-100">
+                    <div class="max-w-sm overflow-hidden rounded">
+                        <div class="px-6 py-4">
+                            <div class="flex items-center">
+                                <i class="text-gray-500 fas fa-location-dot"></i>
+                                <div class="ml-5 text-xl font-bold">Alamat Pengiriman</div>
+                            </div>
+                            <h5 class="mt-5 ml-8 text-base text-gray-700">
+                                Nama: {{ Auth::user()->name }}
+                            </h5>
+                            <h5 class="mt-1 ml-8 text-base text-gray-700">
+                                Alamat: {{ Auth::user()->address }}
+                            </h5>
+                        </div>
                     </div>
-                    <div class="md:w-3/4 md:pl-6">
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $book->title }}</h1>
-                        <table class="table mt-3">
-                            <tbody>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Author</td>
-                                    <td class="px-2">:</td>
-                                    <td>{{ $book->author }}</td>
+                </div>
+            </a>
+
+            <div class="mb-6 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">ID Order</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $orders->first()->payment->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $orders->first()->payment->created_at->format('Y-m-d') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mb-6 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">No</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Title</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Count</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Price</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Total Price</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <?php $no = 1; ?>
+                            @foreach ($orders as $order)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $no++ }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->book->title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->count }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->book->price, 2) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->total_price, 2) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <form action="{{ route('payment.destroy', $order->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 dark:text-red-400">
+                                                <x-heroicon-o-trash class="w-6 h-6"/>
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Publication Year</td>
-                                    <td class="px-2">:</td>
-                                    <td>{{ $book->publication_year }}</td>
-                                </tr>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Category</td>
-                                    <td class="px-2">:</td>
-                                    <td>{{ $book->category->name ?? 'N/A' }}</td>
-                                </tr>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Price</td>
-                                    <td class="px-2">:</td>
-                                    <td>Rp{{ number_format($book->price, 2) }}</td>
-                                </tr>
-                                <tr class="text-gray-600 align-top">
-                                    <td class="min-w-[150px]">Description</td>
-                                    <td class="px-2">:</td>
-                                    <td>{{ $book->description }}</td>
-                                </tr>
-                                <form action="{{ route('payment.store', $book->id) }}" method="POST">
-                                    @csrf
-                                    <tr>
-                                        <td class="font-bold text-gray-900 dark:text-gray-100">Jumlah Pesan</td>
-                                        <td class="px-2">:</td>
-                                        <td>
-                                            <x-text-input id="count" name="count" type="number" min="1" class="block mt-2" required autofocus autocomplete="amount" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                            <x-primary-button class="mt-5 nav-link">
-                                                <i class="fas fa-shopping-cart"></i> Order
-                                            </x-primary-button>
-                                        </td>
-                                    </tr>
-                                </form>
-                            </tbody>
-                        </table>
-                    </div>
+                            @endforeach
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 font-bold whitespace-nowrap">Grand Total</td>
+                                <td colspan="2" class="px-6 py-4 font-bold whitespace-nowrap">Rp{{ number_format($payment->total_price, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex justify-end">
+                                        <a href="{{ route('payment.index') }}" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                            Lanjutkan pembayaran
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

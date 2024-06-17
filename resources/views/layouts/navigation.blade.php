@@ -27,14 +27,14 @@ use App\Models\Order;
                     <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.*')">
                         {{ __('Category') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('order.history')" :active="request()->routeIs('order.history')">
+                    <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
                         {{ __('Transaction') }}
                     </x-nav-link>
                     @else
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('order.history')" :active="request()->routeIs('order.history')">
+                    <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
                         {{ __('History') }}
                     </x-nav-link>
                     @endif
@@ -114,7 +114,7 @@ use App\Models\Order;
                 {{ __('Category') }}
             </x-responsive-nav-link>
             @else
-            <x-responsive-nav-link :href="route('order.history')" :active="request()->routeIs('order.history*')">
+            <x-responsive-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history*')">
                 {{ __('History') }}
             </x-responsive-nav-link>
             @endif

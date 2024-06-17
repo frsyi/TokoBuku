@@ -27,17 +27,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('category', CategoryController::class);
 
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
-    Route::get('payment/{id}', [PaymentController::class, 'show'])->name('payment.show');
-    Route::get('payment/detail/{id}', [PaymentController::class, 'detail'])->name('payment.detail');
-    Route::post('/payment/store/{id}', [PaymentController::class, 'store'])->name('payment.store');
+    Route::get('payment/show/{id}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/{id}', [PaymentController::class, 'store'])->name('payment.store');
     Route::delete('/payment/{id}', [PaymentController::class, 'destroy'])->name('payment.destroy');
-    Route::post('/payment/{id}/tracking', [PaymentController::class, 'updateTrackingNumber'])->name('payment.updateTrackingNumber');
-    Route::patch('/payment/{order}/complete', [PaymentController::class, 'complete'])->name('payment.complete');
-    Route::patch('/payment/{order}/incomplete', [PaymentController::class, 'uncomplete'])->name('payment.uncomplete');
-
+    Route::post('payment/{id}/uploadProof', [PaymentController::class, 'uploadProof'])->name('payment.uploadProof');
+    Route::post('payment/{id}/tracking', [PaymentController::class, 'updateTrackingNumber'])->name('payment.updateTrackingNumber');
+    Route::patch('payment/{payment}/complete', [PaymentController::class, 'complete'])->name('payment.complete');
+    Route::patch('payment/{payment}/incomplete', [PaymentController::class, 'uncomplete'])->name('payment.uncomplete');
+    Route::get('payment/history', [PaymentController::class, 'history'])->name('payment.history');
 
     Route::get('/order', [OrderController::class, 'index'])->name('order.index');
-    Route::get('/order/history', [OrderController::class, 'history'])->name('order.history');
+    Route::get('order/show/{id}', [OrderController::class, 'show'])->name('order.show');
 });
 
 

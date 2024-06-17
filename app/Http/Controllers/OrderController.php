@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
@@ -15,17 +16,9 @@ class OrderController extends Controller
         return view('order.index', compact('payment', 'orders'));
     }
 
-
-    public function history()
+    public function show(string $id)
     {
-        if (Auth::user()->is_admin) {
-            // Jika admin, ambil semua payment
-            $payments = Payment::with('user', 'orders')->get();
-        } else {
-            // Jika bukan admin, ambil payment berdasarkan user yang sedang login
-            $payments = Payment::with('orders')->where('user_id', Auth::user()->id)->get();
-        }
-
-        return view('order.history', compact('payments'));
+        $book = Book::where('id', $id)->first();
+        return view('order.index', compact('book'));
     }
 }

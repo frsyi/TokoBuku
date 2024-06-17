@@ -35,7 +35,7 @@
                         <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                             <?php $no = 1; ?>
                             @forelse ($payments as $payment)
-                            <tr class="bg-white cursor-pointer dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="window.location='{{ route('payment.detail', $payment->id) }}'">
+                            <tr class="bg-white cursor-pointer dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="window.location='{{ route('payment.show', $payment->id) }}'">
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $no++ }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $payment->id }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $payment->created_at }}</td>

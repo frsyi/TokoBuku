@@ -65,15 +65,15 @@
                     <h3 class="mb-4">Informasi Penerima</h3>
                     <div class="mb-2">
                         <span>Nama</span>
-                        <div class="info-item flex items-center">
-                            <i class="text-gray-500 fas fa-user fa-sm mr-2"></i>
+                        <div class="flex items-center info-item">
+                            <i class="mr-2 text-gray-500 fas fa-user fa-sm"></i>
                             <span>{{ Auth::user()->name }}</span>
                         </div>
                     </div>
                     <div class="mb-2">
                         <span>Alamat</span>
-                        <div class="info-item flex items-center">
-                            <i class="text-gray-500 fas fa-map-marker-alt fa-sm mr-2"></i>
+                        <div class="flex items-center info-item">
+                            <i class="mr-2 text-gray-500 fas fa-map-marker-alt fa-sm"></i>
                             <span>{{ Auth::user()->address }}</span>
                         </div>
                     </div>

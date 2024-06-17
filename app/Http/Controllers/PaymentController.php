@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $payment = Payment::where('user_id', Auth::user()->id)
@@ -21,7 +18,6 @@ class PaymentController extends Controller
             ->first();
 
         if (!$payment) {
-            // Tidak ada pembayaran aktif, Anda dapat mengembalikan pesan atau mengarahkan pengguna ke halaman lain
             return redirect()->route('dashboard')->with('error', 'Tidak ada pembayaran aktif.');
         }
 
@@ -29,27 +25,15 @@ class PaymentController extends Controller
         return view('payment.create', compact('payment', 'orders'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, $id)
     {
         $book = Book::find($id);
         $payment_date = Carbon::now();
 
-        //cek validasi
+        // Check payment validation
         $check_payment = Payment::where('user_id', Auth::user()->id)->where('status', 0)->first();
 
-        //simpan ke database payment
+        // Save payment to database
         if (empty($check_payment)) {
             $payment = new Payment();
             $payment->user_id = Auth::user()->id;
@@ -59,10 +43,10 @@ class PaymentController extends Controller
             $payment->save();
         }
 
-        //simpan ke database order
+        // Save order to database
         $new_payment = Payment::where('user_id', Auth::user()->id)->where('status', 0)->first();
 
-        //cek order
+        // Check order
         $check_order = Order::where('book_id', $book->id)->where('payment_id', $new_payment->id)->first();
         if (empty($check_order)) {
             $order = new Order();
@@ -73,89 +57,59 @@ class PaymentController extends Controller
             $order->save();
         } else {
             $order = Order::where('book_id', $book->id)->where('payment_id', $new_payment->id)->first();
-            $order->count = $order->count + $request->count;
+            $order->count += $request->count;
 
-            //harga sekarang
+            // Update price
             $new_order_price = $book->price * $request->count;
-            $order->total_price = $order->total_price + $new_order_price;
+            $order->total_price += $new_order_price;
             $order->update();
         }
 
-        //jumlah total
-        // Recalculate the total price from the orders
+        // Recalculate the total price
         $total_price = Order::where('payment_id', $new_payment->id)->sum('total_price');
         $payment = Payment::where('user_id', Auth::user()->id)->where('status', 0)->first();
         $payment->total_price = $total_price;
         $payment->update();
 
-        // Tambahkan pesan sukses ke session
         return redirect()->route('dashboard')->with('success', 'Order created successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        $book = Book::where('id', $id)->first();
-        return view('payment.index', compact('book'));
+        $payment = Payment::with('user', 'orders.book')->findOrFail($id);
+        return view('payment.detail', compact('payment'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         $order = Order::where('id', $id)->first();
 
         $payment = Payment::where('id', $order->payment_id)->first();
-        $payment->total_price = $payment->total_price - $order->total_price;
+        $payment->total_price -= $order->total_price;
         $payment->update();
 
         $order->delete();
 
-        return redirect()->route('order.index')->with('success', 'Order deleted successfully!');
+        return redirect()->route('payment.index')->with('success', 'Order deleted successfully!');
     }
 
-    public function payment(Request $request)
+    public function uploadProof(Request $request, $id)
     {
-        // Simpan data payment di tabel order
-        $payments = $request->user()->payments;
+        $request->validate([
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-        foreach ($payments as $payment) {
-            Order::create([
-                'user_id' => $payment->user_id,
-                'order_id' => $payment->id,
-                'count' => $payment->count,
-                'total_price' => $payment->total_price,
-            ]);
+        $payment = Payment::findOrFail($id);
+
+        if ($request->hasFile('payment_proof')) {
+            $file = $request->file('payment_proof');
+            $path = $file->store('payment_proofs', 'public');
+
+            $payment->payment_proof = $path;
+            $payment->save();
         }
 
-        // Arahkan ke halaman order
-        return redirect()->route('order.index')->with('success', 'Payment completed successfully!');
-    }
-
-    public function detail($id)
-    {
-        // Memuat relasi dengan user dan order.book untuk halaman detail
-        $payment = Payment::with('user', 'orders.book')->findOrFail($id);
-        return view('order.detail', compact('payment'));
+        return redirect()->route('payment.show', $id)->with('success', 'Payment proof uploaded successfully!');
     }
 
     public function updateTrackingNumber(Request $request, $id)
@@ -168,29 +122,39 @@ class PaymentController extends Controller
         $payment->tracking_number = $request->tracking_number;
         $payment->save();
 
-        return redirect()->route('payment.detail', $id)->with('success', 'Tracking number updated successfully!');
+        return redirect()->route('payment.show', $id)->with('success', 'Tracking number updated successfully!');
     }
 
     public function complete(Payment $payment)
     {
         if (auth()->user()->id == $payment->user_id) {
             $payment->update(['is_complete' => true]);
-            return redirect()->route('order.history')->with('success', 'Order marked as complete!');
+            return redirect()->route('payment.history')->with('success', 'Order marked as complete!');
         }
 
-        return redirect()->route('order.history')->with('danger', 'You are not authorized to complete this!');
+        return redirect()->route('payment.history')->with('danger', 'You are not authorized to complete this!');
     }
 
     public function uncomplete(Payment $payment)
     {
         if (auth()->user()->id == $payment->user_id) {
-            $payment->update([
-                'is_complete' => false,
-            ]);
-
-            return redirect()->route('order.history')->with('success', 'uncompleted successfully!');
+            $payment->update(['is_complete' => false]);
+            return redirect()->route('payment.history')->with('success', 'Order uncompleted successfully!');
         }
 
-        return redirect()->route('order.history')->with('danger', 'You are not authorized to uncomplete this!');
+        return redirect()->route('payment.history')->with('danger', 'You are not authorized to uncomplete this!');
+    }
+
+    public function history()
+    {
+        if (Auth::user()->is_admin) {
+            // Jika admin, ambil semua payment
+            $payments = Payment::with('user', 'orders')->get();
+        } else {
+            // Jika bukan admin, ambil payment berdasarkan user yang sedang login
+            $payments = Payment::with('orders')->where('user_id', Auth::user()->id)->get();
+        }
+
+        return view('payment.history', compact('payments'));
     }
 }

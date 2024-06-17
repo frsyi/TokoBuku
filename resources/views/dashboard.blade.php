@@ -84,7 +84,7 @@
                                                                 <form action="{{ route('payment.index', $book->id) }}" method="POST">
                                                                     @csrf
                                                                     <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                                                    <x-order-button :href="route('payment.show', ['id' => $book->id])" class="nav-link">
+                                                                    <x-order-button :href="route('order.show', ['id' => $book->id])" class="nav-link">
                                                                         <i class="fas fa-shopping-cart"></i>
                                                                     </x-order-button>
                                                                 </form>
