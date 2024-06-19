@@ -6,7 +6,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Order') }}
+            {{ __('Cart') }}
         </h2>
     </x-slot>
 
@@ -37,25 +37,6 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">ID Order</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $orders->first()->payment->id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $orders->first()->payment->created_at->format('Y-m-d') }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="mb-6 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">No</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Title</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Count</th>
@@ -66,15 +47,20 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <?php $no = 1; ?>
-                            @foreach ($orders as $order)
+                            @foreach ($carts as $cart)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $no++ }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->book->title }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $order->count }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->book->price, 2) }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($order->total_price, 2) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $cart->book->title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $cart->count }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Rp. {{ number_format($cart->book->price, 2) }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <form action="{{ route('payment.destroy', $order->id) }}" method="POST">
+                                        @php
+                                            $totalPricePerItem = $cart->book->price * $cart->count;
+                                        @endphp
+                                        Rp. {{ number_format($totalPricePerItem, 2) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <form action="{{ route('cart.destroy', $cart->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 dark:text-red-400">
@@ -86,12 +72,19 @@
                             @endforeach
                             <tr>
                                 <td colspan="4" class="px-6 py-4 font-bold whitespace-nowrap">Grand Total</td>
-                                <td colspan="2" class="px-6 py-4 font-bold whitespace-nowrap">Rp{{ number_format($payment->total_price, 2) }}</td>
+                                <td colspan="2" class="px-6 py-4 font-bold whitespace-nowrap">
+                                    @php
+                                        $grandTotal = $carts->sum(function ($cart) {
+                                            return $cart->book->price * $cart->count;
+                                        });
+                                    @endphp
+                                    Rp. {{ number_format($grandTotal, 2) }}
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="6" class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex justify-end">
-                                        <a href="{{ route('payment.index') }}" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                        <a href="{{ route('transaction.create') }}" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
                                             Lanjutkan pembayaran
                                         </a>
                                     </div>

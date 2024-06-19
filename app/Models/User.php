@@ -44,8 +44,13 @@ class User extends Authenticatable
         'is_admin' => 'boolean'
     ];
 
-    public function payments(): HasMany
+    public function carts(): HasMany
     {
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(Cart::class);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

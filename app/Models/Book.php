@@ -35,8 +35,8 @@ class Book extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function orders(): HasMany
+    public function carts(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Cart::class);
     }
 }

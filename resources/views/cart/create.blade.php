@@ -43,14 +43,14 @@
                                 <tr class="text-gray-600 align-top">
                                     <td class="min-w-[150px]">Price</td>
                                     <td class="px-2">:</td>
-                                    <td>Rp{{ number_format($book->price, 2) }}</td>
+                                    <td>Rp. {{ number_format($book->price, 2) }}</td>
                                 </tr>
                                 <tr class="text-gray-600 align-top">
                                     <td class="min-w-[150px]">Description</td>
                                     <td class="px-2">:</td>
                                     <td>{{ $book->description }}</td>
                                 </tr>
-                                <form action="{{ route('payment.store', $book->id) }}" method="POST">
+                                <form action="{{ route('cart.store', $book->id) }}" method="POST">
                                     @csrf
                                     <tr>
                                         <td class="font-bold text-gray-900 dark:text-gray-100">Jumlah Pesan</td>

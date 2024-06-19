@@ -1,6 +1,5 @@
 <?php
-use App\Models\Payment;
-use App\Models\Order;
+use App\Models\Cart;
 ?>
 
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700">
@@ -25,14 +24,14 @@ use App\Models\Order;
                         <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.*')">
                             {{ __('Category') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
+                        <x-nav-link :href="route('transaction.index')" :active="request()->routeIs('transaction.index')">
                             {{ __('Transaction') }}
                         </x-nav-link>
                         @else
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
+                        <x-nav-link :href="route('transaction.index')" :active="request()->routeIs('transaction.index')">
                             {{ __('History') }}
                         </x-nav-link>
                         @endif
@@ -49,11 +48,10 @@ use App\Models\Order;
                 @auth
                     @can('buyer')
                         <?php
-                        $main_payment = Payment::where('user_id', Auth::user()->id)->where('status', 0)->first();
-                        $notif = $main_payment ? Order::where('payment_id', $main_payment->id)->count() : 0;
+                        $total_items_in_cart = Cart::where('user_id', Auth::id())->sum('count');
                         ?>
-                        <a href="{{ route('order.index') }}" class="inline-flex items-center px-3 py-2 ml-4 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
-                            <i class="fas fa-shopping-cart"></i><span class="badge badge-danger">{{ $notif }}</span>
+                        <a href="{{ route('cart.index') }}" class="inline-flex items-center px-3 py-2 ml-4 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+                            <i class="fas fa-shopping-cart"></i><span class="badge badge-danger">{{ $total_items_in_cart }}</span>
                         </a>
                     @endcan
 
@@ -119,7 +117,7 @@ use App\Models\Order;
                     {{ __('Category') }}
                 </x-responsive-nav-link>
                 @else
-                <x-responsive-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history*')">
+                <x-responsive-nav-link :href="route('transaction.index')" :active="request()->routeIs('transaction.index*')">
                     {{ __('History') }}
                 </x-responsive-nav-link>
                 @endif

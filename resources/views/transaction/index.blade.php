@@ -34,44 +34,41 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                             <?php $no = 1; ?>
-                            @forelse ($payments as $payment)
-                            <tr class="bg-white cursor-pointer dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="window.location='{{ route('payment.show', $payment->id) }}'">
+                            @forelse ($transactions as $transaction)
+                            <tr class="bg-white cursor-pointer dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="window.location='{{ route('transaction.show', $transaction->id) }}'">
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $no++ }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $payment->id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $payment->created_at }}</td>
-
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->created_at->format('Y-m-d') }}</td>
 
                                 @if(Auth::check() && Auth::user()->is_admin)
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $payment->user->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->user->name }}</td>
                                 @endif
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $payment->orders->sum('count') }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">Rp. {{ number_format($payment->total_price, 2) }}</td>
-
+                                <td class="px-6 py-4 whitespace-nowrap">{{ array_sum(array_column($transaction->items, 'count')) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">Rp. {{ number_format($transaction->total_price, 2) }}</td>
 
                                 @if(!Auth::check() || !Auth::user()->is_admin)
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $payment->tracking_number }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->tracking_number }}</td>
                                 @endif
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                @if ($payment->is_complete == false)
-                                    <form action="{{ route('payment.complete', $payment) }}" method="Post">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="text-green-600 dark:text-green-400">
-                                            Delivered
-                                        </button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('payment.uncomplete', $todo) }}" method="Post">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="text-blue-600 dark:text-blue-400">
-                                            Pending
-                                        </button>
-                                    </form>
-                                @endif
-
+                                    @if (!$transaction->is_complete)
+                                        <form action="{{ route('transaction.complete', $transaction) }}" method="Post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="text-green-600 dark:text-green-400">
+                                                Delivered
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('transaction.uncomplete', $transaction) }}" method="Post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="text-blue-600 dark:text-blue-400">
+                                                Pending
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $payment->status ? 'Received' : 'Not Received' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->status ? 'Received' : 'Not Received' }}</td>
                             </tr>
                             @empty
                             <tr class="bg-white dark:bg-gray-800">

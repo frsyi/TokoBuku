@@ -76,15 +76,15 @@
                                                         <p class="font-bold text-gray-800 dark:text-gray-200">Rp{{ number_format($book->price, 2) }}</p>
                                                         @auth
                                                             @if(auth()->user()->is_admin)
-                                                                <form action="{{ route('payment.index', $book->id) }}" method="POST">
+                                                                <form action="{{ route('cart.index', $book->id) }}" method="POST">
                                                                     @csrf
                                                                     <input type="hidden" name="book_id" value="{{ $book->id }}">
                                                                 </form>
                                                             @else
-                                                                <form action="{{ route('payment.index', $book->id) }}" method="POST">
+                                                                <form action="{{ route('cart.index', $book->id) }}" method="POST">
                                                                     @csrf
                                                                     <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                                                    <x-order-button :href="route('order.show', ['id' => $book->id])" class="nav-link">
+                                                                    <x-order-button :href="route('cart.show', ['id' => $book->id])" class="nav-link">
                                                                         <i class="fas fa-shopping-cart"></i>
                                                                     </x-order-button>
                                                                 </form>
