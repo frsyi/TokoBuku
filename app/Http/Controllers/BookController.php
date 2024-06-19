@@ -10,9 +10,27 @@ use App\Models\Category;
 
 class BookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $books = Book::with('category')->orderBy('created_at', 'desc')->get();
+
+        $query = Book::query();
+
+        // Filter pencarian berdasarkan parameter yang diterima dari request
+        if ($search = $request->input('search')) {
+            $query->where(function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('author', 'like', '%' . $search . '%')
+                    ->orWhere('publication_year', 'like', '%' . $search . '%')
+                    ->orWhereHas('category', function ($q) use ($search) {
+                        $q->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        // Mengambil hasil pencarian dengan pagination
+        $books = $query->orderBy('title')->paginate(10)->withQueryString();
+
         return view('book.index', compact('books'));
     }
 
@@ -52,11 +70,11 @@ class BookController extends Controller
 
             try {
                 $file = $request->file('image');
-                $fileName = time().'_'.$file->getClientOriginalName();
+                $fileName = time() . '_' . $file->getClientOriginalName();
                 $destinationPath = public_path('storage/images');
                 $file->move($destinationPath, $fileName);
                 Log::info('File moved to: ' . $destinationPath . '/' . $fileName);
-                $book->image = 'images/'.$fileName;
+                $book->image = 'images/' . $fileName;
             } catch (\Exception $e) {
                 Log::error('File storage error: ' . $e->getMessage());
                 return back()->withErrors(['image' => 'File storage error: ' . $e->getMessage()]);
@@ -111,5 +129,28 @@ class BookController extends Controller
 
         // Redirect ke halaman index dengan pesan sukses
         return redirect()->route('book.index')->with('success', 'Book deleted successfully!');
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        if ($search) {
+            $related_books = Book::where(function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('author', 'like', '%' . $search . '%')
+                    ->orWhere('publication_year', 'like', '%' . $search . '%')
+                    ->orWhereHas('category', function ($q) use ($search) {
+                        $q->where('name', 'like', '%' . $search . '%');
+                    });
+            })
+                ->orderBy('title')
+                ->paginate(10)
+                ->withQueryString();
+        } else {
+            $related_books = Book::inRandomOrder()->paginate(10);
+        }
+
+        return view('dashboard', compact('related_books'));
     }
 }

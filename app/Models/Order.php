@@ -12,28 +12,19 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'book_title',
-        'amount',
-        'unit_price',
+        'book_id',
+        'payment_id',
+        'count',
         'total_price',
-        'tracking_number',
-        'order_status',
-        'confirmation',
     ];
 
-    protected $casts = [
-        'order_status' => 'boolean',
-        'confirmation' => 'boolean',
-    ];
-
-    public function user(): BelongsTo
+    public function book(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Book::class);
     }
 
-    public function transactions(): HasMany
+    public function payment(): BelongsTo
     {
-        return $this->hasMany(Transaction::class);
+        return $this->belongsTo(Payment::class);
     }
 }

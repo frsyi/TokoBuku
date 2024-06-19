@@ -12,6 +12,9 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -73,12 +76,12 @@
                                                         <p class="font-bold text-gray-800 dark:text-gray-200">Rp{{ number_format($book->price, 2) }}</p>
                                                         @auth
                                                             @if(auth()->user()->is_admin)
-                                                                <form action="{{ route('order.index', $book->id) }}" method="POST">
+                                                                <form action="{{ route('payment.index', $book->id) }}" method="POST">
                                                                     @csrf
                                                                     <input type="hidden" name="book_id" value="{{ $book->id }}">
                                                                 </form>
                                                             @else
-                                                                <form action="{{ route('order.index', $book->id) }}" method="POST">
+                                                                <form action="{{ route('payment.index', $book->id) }}" method="POST">
                                                                     @csrf
                                                                     <input type="hidden" name="book_id" value="{{ $book->id }}">
                                                                     <x-order-button :href="route('order.show', ['id' => $book->id])" class="nav-link">

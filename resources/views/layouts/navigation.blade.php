@@ -1,6 +1,6 @@
 <?php
+use App\Models\Payment;
 use App\Models\Order;
-use App\Models\Transaction;
 ?>
 
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700">
@@ -17,6 +17,7 @@ use App\Models\Transaction;
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+<<<<<<< HEAD
                     @auth
                         @if(auth()->user()->is_admin)
 
@@ -38,6 +39,29 @@ use App\Models\Transaction;
                         </x-nav-link>
                         @endif
                     @endauth
+=======
+                    @if(auth()->user()->is_admin)
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('book.index')" :active="request()->routeIs('book.*')">
+                        {{ __('Book') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.*')">
+                        {{ __('Category') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
+                        {{ __('Transaction') }}
+                    </x-nav-link>
+                    @else
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
+                        {{ __('History') }}
+                    </x-nav-link>
+                    @endif
+>>>>>>> 61af8f76c95a7f32005ec9b9870fbd836ffd0a93
                 </div>
             </div>
 
@@ -46,10 +70,10 @@ use App\Models\Transaction;
                 @auth
                     @can('buyer')
                         <?php
-                        $main_order = Order::where('user_id', Auth::user()->id)->where('status', 0)->first();
-                        $notif = $main_order ? Transaction::where('order_id', $main_order->id)->count() : 0;
+                        $main_payment = Payment::where('user_id', Auth::user()->id)->where('status', 0)->first();
+                        $notif = $main_payment ? Order::where('payment_id', $main_payment->id)->count() : 0;
                         ?>
-                        <a href="{{ route('transactions.index') }}" class="inline-flex items-center px-3 py-2 ml-4 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+                        <a href="{{ route('order.index') }}" class="inline-flex items-center px-3 py-2 ml-4 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
                             <i class="fas fa-shopping-cart"></i><span class="badge badge-danger">{{ $notif }}</span>
                         </a>
                     @endcan
@@ -103,6 +127,7 @@ use App\Models\Transaction;
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+<<<<<<< HEAD
             @auth
                 @if(auth()->user()->is_admin)
 
@@ -118,6 +143,23 @@ use App\Models\Transaction;
                 </x-responsive-nav-link>
                 @endif
             @endauth
+=======
+            @if(auth()->user()->is_admin)
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('book.index')" :active="request()->routeIs('book.*')">
+                {{ __('Book') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('category.index')" :active="request()->routeIs('category.*')">
+                {{ __('Category') }}
+            </x-responsive-nav-link>
+            @else
+            <x-responsive-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history*')">
+                {{ __('History') }}
+            </x-responsive-nav-link>
+            @endif
+>>>>>>> 61af8f76c95a7f32005ec9b9870fbd836ffd0a93
         </div>
 
         <!-- Responsive Settings Options -->

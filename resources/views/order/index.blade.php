@@ -50,13 +50,13 @@
                                     <td class="px-2">:</td>
                                     <td>{{ $book->description }}</td>
                                 </tr>
-                                <form action="{{ route('order.store', $book->id) }}" method="POST">
+                                <form action="{{ route('payment.store', $book->id) }}" method="POST">
                                     @csrf
                                     <tr>
                                         <td class="font-bold text-gray-900 dark:text-gray-100">Jumlah Pesan</td>
                                         <td class="px-2">:</td>
                                         <td>
-                                            <x-text-input id="amount" name="amount" type="number" min="1" class="block mt-2" required autofocus autocomplete="amount" />
+                                            <x-text-input id="count" name="count" type="number" min="1" class="block mt-2" required autofocus autocomplete="count" />
                                         </td>
                                     </tr>
                                     <tr>
