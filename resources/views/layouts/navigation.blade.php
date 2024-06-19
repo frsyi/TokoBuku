@@ -17,51 +17,30 @@ use App\Models\Order;
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-<<<<<<< HEAD
                     @auth
                         @if(auth()->user()->is_admin)
-
                         <x-nav-link :href="route('book.index')" :active="request()->routeIs('book.*')">
                             {{ __('Book') }}
                         </x-nav-link>
                         <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.*')">
                             {{ __('Category') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('transactions.history')" :active="request()->routeIs('transactions.history')">
+                        <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
                             {{ __('Transaction') }}
                         </x-nav-link>
                         @else
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('transactions.history')" :active="request()->routeIs('transactions.history')">
+                        <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
                             {{ __('History') }}
                         </x-nav-link>
                         @endif
-                    @endauth
-=======
-                    @if(auth()->user()->is_admin)
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('book.index')" :active="request()->routeIs('book.*')">
-                        {{ __('Book') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.*')">
-                        {{ __('Category') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
-                        {{ __('Transaction') }}
-                    </x-nav-link>
                     @else
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history')">
-                        {{ __('History') }}
-                    </x-nav-link>
-                    @endif
->>>>>>> 61af8f76c95a7f32005ec9b9870fbd836ffd0a93
+                        <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
+                            {{ __('Home') }}
+                        </x-nav-link>
+                    @endauth
                 </div>
             </div>
 
@@ -98,6 +77,7 @@ use App\Models\Order;
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
+
                                 <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
@@ -127,10 +107,11 @@ use App\Models\Order;
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-<<<<<<< HEAD
             @auth
                 @if(auth()->user()->is_admin)
-
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('book.index')" :active="request()->routeIs('book.*')">
                     {{ __('Book') }}
                 </x-responsive-nav-link>
@@ -138,28 +119,15 @@ use App\Models\Order;
                     {{ __('Category') }}
                 </x-responsive-nav-link>
                 @else
-                <x-responsive-nav-link :href="route('transactions.history')" :active="request()->routeIs('transactions.history*')">
+                <x-responsive-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history*')">
                     {{ __('History') }}
                 </x-responsive-nav-link>
                 @endif
-            @endauth
-=======
-            @if(auth()->user()->is_admin)
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('book.index')" :active="request()->routeIs('book.*')">
-                {{ __('Book') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('category.index')" :active="request()->routeIs('category.*')">
-                {{ __('Category') }}
-            </x-responsive-nav-link>
             @else
-            <x-responsive-nav-link :href="route('payment.history')" :active="request()->routeIs('payment.history*')">
-                {{ __('History') }}
-            </x-responsive-nav-link>
-            @endif
->>>>>>> 61af8f76c95a7f32005ec9b9870fbd836ffd0a93
+                <x-responsive-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
+                    {{ __('Home') }}
+                </x-responsive-nav-link>
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->
