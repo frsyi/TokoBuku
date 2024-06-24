@@ -9,28 +9,45 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
 
-
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
-Route::get('/dashboard', [DashboardController::class, 'dashboard'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('book', BookController::class);
-    Route::resource('category', CategoryController::class);
+    Route::resource('book', BookController::class)->names([
+        'index' => 'book.index',
+        'create' => 'book.create',
+        'store' => 'book.store',
+        'show' => 'book.show',
+        'edit' => 'book.edit',
+        'update' => 'book.update',
+        'destroy' => 'book.destroy',
+    ]);
 
-    // Rute untuk keranjang belanja
-    Route::resource('cart', CartController::class);
+    Route::resource('category', CategoryController::class)->names([
+        'index' => 'category.index',
+        'create' => 'category.create',
+        'store' => 'category.store',
+        'show' => 'category.show',
+        'edit' => 'category.edit',
+        'update' => 'category.update',
+        'destroy' => 'category.destroy',
+    ]);
+
+    Route::resource('cart', CartController::class)->except(['show'])->names([
+        'index' => 'cart.index',
+        'create' => 'cart.create',
+        'store' => 'cart.store',
+        'edit' => 'cart.edit',
+        'update' => 'cart.update',
+        'destroy' => 'cart.destroy',
+    ]);
     Route::get('cart/show/{id}', [CartController::class, 'show'])->name('cart.show');
-    Route::post('/cart/store/{id}', [CartController::class, 'store'])->name('cart.store');
-    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
-    // Rute untuk transaksi
     Route::get('transaction', [TransactionController::class, 'index'])->name('transaction.index');
     Route::get('transaction/create', [TransactionController::class, 'create'])->name('transaction.create');
     Route::get('transaction/show/{id}', [TransactionController::class, 'show'])->name('transaction.show');
@@ -40,8 +57,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('transaction/{transaction}/uncomplete', [TransactionController::class, 'uncomplete'])->name('transaction.uncomplete');
 });
 
-
+// Route group for admin middleware
 Route::middleware(['admin'])->group(function () {
+    // Define admin routes here if needed
 });
 
 require __DIR__ . '/auth.php';
