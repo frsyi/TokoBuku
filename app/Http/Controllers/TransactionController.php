@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Cart;
 use App\Models\Transaction;
 
@@ -56,11 +57,21 @@ class TransactionController extends Controller
             'payment_proof' => 'required|file|max:10240', // maksimum 10MB
         ]);
 
-        // Mengatur penyimpanan bukti pembayaran
-        $paymentProof = null;
+        // Debug untuk memeriksa file yang diunggah
         if ($request->hasFile('payment_proof')) {
-            $paymentProof = $request->file('payment_proof')->store('payment_proofs', 'public');
+            $file = $request->file('payment_proof');
+            Log::info('File payment_proof uploaded: ' . $file->getClientOriginalName());
+
+            // Mengatur penyimpanan bukti pembayaran
+            try {
+                $paymentProof = $file->store('payment_proofs', 'public');
+                Log::info('Payment proof stored at: ' . $paymentProof);
+            } catch (\Exception $e) {
+                Log::error('Error storing payment proof: ' . $e->getMessage());
+                return back()->with('error', 'Terjadi kesalahan saat menyimpan bukti pembayaran.');
+            }
         } else {
+            Log::error('No payment proof file uploaded.');
             return back()->with('error', 'Anda harus mengunggah bukti pembayaran sebelum melakukan checkout.');
         }
 
@@ -74,18 +85,25 @@ class TransactionController extends Controller
             ];
         })->toJson();
 
-        $transaction = Transaction::create([
-            'user_id' => $user->id,
-            'items' => $items,
-            'payment_proof' => $paymentProof,
-            'order_status' => false,
-            'confirmation' => false,
-            'total_price' => $totalPrice,
-        ]);
+        // Simpan transaksi ke database
+        try {
+            $transaction = Transaction::create([
+                'user_id' => $user->id,
+                'items' => $items,
+                'payment_proof' => $paymentProof,
+                'order_status' => false,
+                'confirmation' => false,
+                'total_price' => $totalPrice,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error creating transaction: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat membuat transaksi.');
+        }
 
-        // Hapus keranjang setelah checkout
+        // Hapus keranjang setelah checkout berhasil
         Cart::where('user_id', $user->id)->delete();
 
+        // Redirect dengan pesan sukses
         return redirect()->route('transaction.index')
             ->with('success', 'Checkout berhasil, pesanan akan segera diproses.');
     }
