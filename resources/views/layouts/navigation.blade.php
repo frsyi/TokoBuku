@@ -36,9 +36,16 @@ use App\Models\Cart;
                         </x-nav-link>
                         @endif
                     @else
-                        <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
-                            {{ __('Home') }}
+                    <x-nav-link :href="route('welcome') . '#home'" :active="request()->routeIs('welcome') && request()->segment(1) === 'home'">
+                        {{ __('Home') }}
+                    </x-nav-link>
+                        <x-nav-link :href="route('welcome') . '#about'" :active="request()->routeIs('welcome') && request()->segment(1) === 'about'">
+                            {{ __('About') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('welcome') . '#feature'" :active="request()->routeIs('welcome') && request()->segment(1) === 'feature'">
+                            {{ __('Feature') }}
+                        </x-nav-link>
+
                     @endauth
                 </div>
             </div>
@@ -61,7 +68,7 @@ use App\Models\Cart;
                                 <div>{{ Auth::user()->name }}</div>
                                 <div class="ms-1">
                                     <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 111.414 1.414l-4 4a1 1 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                     </svg>
                                 </div>
                             </button>
@@ -122,9 +129,16 @@ use App\Models\Cart;
                 </x-responsive-nav-link>
                 @endif
             @else
-                <x-responsive-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
-                    {{ __('Home') }}
+            <x-responsive-nav-link :href="route('welcome') . '#home'" :active="request()->routeIs('welcome') && request()->segment(1) === 'home'">
+                {{ __('Home') }}
+            </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('welcome') . '#about'" :active="request()->routeIs('welcome') && request()->segment(1) === 'about'">
+                    {{ __('About') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('welcome') . '#feature'" :active="request()->routeIs('welcome') && request()->segment(1) === 'feature'">
+                    {{ __('Feature') }}
+                </x-responsive-nav-link>
+
             @endauth
         </div>
 
@@ -151,19 +165,23 @@ use App\Models\Cart;
                     </form>
                 </div>
             </div>
-        @endauth
-
-        @guest
+        @else
             <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                 <div class="px-4">
+                    <div class="text-base font-medium text-gray-800 dark:text-gray-200">Guest</div>
+                    <div class="text-sm font-medium text-gray-500">guest@example.com</div>
+                </div>
+
+                <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('login')">
-                        {{ __('Log In') }}
+                        {{ __('Log in') }}
                     </x-responsive-nav-link>
+
                     <x-responsive-nav-link :href="route('register')">
                         {{ __('Register') }}
                     </x-responsive-nav-link>
                 </div>
             </div>
-        @endguest
+        @endauth
     </div>
 </nav>
