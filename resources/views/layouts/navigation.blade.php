@@ -42,8 +42,8 @@ use App\Models\Cart;
                         <x-nav-link :href="route('welcome') . '#about'" :active="request()->routeIs('welcome') && request()->segment(1) === 'about'">
                             {{ __('About') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('welcome') . '#feature'" :active="request()->routeIs('welcome') && request()->segment(1) === 'feature'">
-                            {{ __('Feature') }}
+                        <x-nav-link :href="route('welcome') . '#team'" :active="request()->routeIs('welcome') && request()->segment(1) === 'team'">
+                            {{ __('Team') }}
                         </x-nav-link>
 
                     @endauth
@@ -135,8 +135,8 @@ use App\Models\Cart;
                 <x-responsive-nav-link :href="route('welcome') . '#about'" :active="request()->routeIs('welcome') && request()->segment(1) === 'about'">
                     {{ __('About') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('welcome') . '#feature'" :active="request()->routeIs('welcome') && request()->segment(1) === 'feature'">
-                    {{ __('Feature') }}
+                <x-responsive-nav-link :href="route('welcome') . '#team'" :active="request()->routeIs('welcome') && request()->segment(1) === 'team'">
+                    {{ __('Team') }}
                 </x-responsive-nav-link>
 
             @endauth
