@@ -15,6 +15,7 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -23,27 +24,31 @@
         <!-- Theme Toggle Switch -->
         <div class="flex justify-end p-4">
             <label for="theme-toggle" class="inline-flex items-center cursor-pointer">
-                <span class="mr-2 text-gray-700 dark:text-gray-300">Light</span>
+                <div class="ml-2">
+                    <i class="text-gray-500 fas fa-sun"></i>
+                </div>
                 <div class="relative">
                     <input type="checkbox" id="theme-toggle" class="sr-only" x-model="darkMode">
                     <div class="w-10 h-4 bg-gray-300 rounded-full shadow-inner dark:bg-gray-600"></div>
                     <div class="absolute inset-y-0 left-0 w-6 h-6 transition-transform bg-white rounded-full shadow" :class="{ 'translate-x-full': darkMode, 'translate-x-0': !darkMode }"></div>
                 </div>
-                <span class="ml-2 text-gray-700 dark:text-gray-300">Dark</span>
+                <div class="ml-2">
+                    <i class="text-gray-500 fas fa-moon"></i>
+                </div>
             </label>
         </div>
 
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header class="bg-indigo-500 shadow dark:bg-gray-800">
-                <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
-
         <!-- Page Content -->
         <main>
+            <!-- Hero Section -->
+            <section class="py-16 text-center bg-gray-100 dark:bg-gray-900">
+                <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100">Welcome to {{ config('app.name', 'Laravel') }}</h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">Your one-stop solution for book discovery</p>
+                </div>
+            </section>
+
+            <!-- Search and Related Books Section -->
             <div class="py-12">
                 <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
@@ -102,22 +107,47 @@
                     </div>
                 </div>
             </div>
+
+            <!-- About Section -->
+            <section id="about" class="py-16 bg-white dark:bg-gray-800">
+                <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100">About Us</h2>
+                    <p class="mt-4 text-gray-600 dark:text-gray-300">
+                        We are dedicated to bringing you the best collection of books, spanning various genres and authors. Our mission is to promote reading culture and make books accessible to everyone.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Our Team Section -->
+            <section id="team" class="py-16 bg-gray-100 dark:bg-gray-900">
+                <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Our Team</h2>
+                    <div class="grid grid-cols-1 gap-8 mt-8 sm:grid-cols-2 lg:grid-cols-3">
+                        <!-- Team Members -->
+                        <div class="text-center">
+                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Beatrix Devanti Agsi</h3>
+                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140001</p>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Dianitasya Ananda Masta</h3>
+                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140011</p>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Fahma Rosyidah</h3>
+                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140030</p>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Siti Marfungah Dwi Lestari</h3>
+                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140038</p>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Sofi Miranda</h3>
+                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140076</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
-
-    <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- SweetAlert2 Notification Script -->
-    @if (session('success'))
-        <script>
-            Swal.fire({
-                title: 'Success!',
-                text: '{{ session('success') }}',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        </script>
-    @endif
 </body>
 </html>
