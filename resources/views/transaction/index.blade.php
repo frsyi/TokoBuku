@@ -35,7 +35,7 @@
                         <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                             <?php $no = 1; ?>
                             @forelse ($transactions as $transaction)
-                            <tr class="bg-white cursor-pointer dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="window.location='{{ route('transaction.show', $transaction->id) }}'">
+                            <tr class="bg-white cursor-pointer dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="if(event.target.tagName !== 'BUTTON') { window.location='{{ route('transaction.show', $transaction->id) }}' }">
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $no++ }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->id }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->created_at->format('Y-m-d') }}</td>
@@ -51,25 +51,26 @@
                                 @endif
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if(Auth::check() && Auth::user()->is_admin)
-                                        @if (!$transaction->order_status)
-                                            <form action="{{ route('transaction.processed', $transaction) }}" method="Post">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="text-blue-600 dark:text-blue-400">
-                                                    Processed
-                                                </button>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('transaction.delivered', $transaction) }}" method="Post">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="text-green-600 dark:text-green-400">
-                                                    Delivered
-                                                </button>
-                                            </form>
+                                        @if ($transaction->order_status == false)
+                                                <form action="{{ route('transaction.delivered', $transaction) }}" method="Post">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="text-green-600 dark:text-green-400">
+                                                        Delivered
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('transaction.processed', $transaction) }}" method="Post">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="text-blue-600 dark:text-blue-400">
+                                                        Processed
+                                                    </button>
+                                                </form>
+
                                         @endif
                                     @else
-                                        @if (!$transaction->order_status)
+                                        @if ($transaction->order_status == false)
                                             <span class="text-yellow-600 dark:text-yellow-400">Processed</span>
                                         @else
                                             <span class="text-green-600 dark:text-green-400">Delivered</span>
@@ -78,17 +79,29 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if(Auth::check() && !Auth::user()->is_admin)
-                                        <form action="{{ route('transaction.toggleConfirmation', $transaction) }}" method="Post">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="text-{{ $transaction->confirmation ? 'blue' : 'green' }}-600 dark:text-{{ $transaction->confirmation ? 'blue' : 'green' }}-400">
-                                                {{ $transaction->confirmation ? 'Received' : 'Not Received' }}
-                                            </button>
-                                        </form>
+                                        @if ($transaction->confirmation == false)
+                                            <form action="{{ route('transaction.received', $transaction) }}" method="Post">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="text-green-600 dark:text-green-400">
+                                                    Received
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('transaction.unreceived', $transaction) }}" method="Post">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="text-blue-600 dark:text-blue-400">
+                                                    Not Received
+                                                </button>
+                                            </form>
+                                        @endif
                                     @else
-                                        <span class="text-{{ $transaction->confirmation ? 'green' : 'yellow' }}-600 dark:text-{{ $transaction->confirmation ? 'green' : 'yellow' }}-400">
-                                            {{ $transaction->confirmation ? 'Received' : 'Unreceived' }}
-                                        </span>
+                                        @if ($transaction->confirmation == false)
+                                            <span class="text-yellow-600 dark:text-yellow-400">Unreceived</span>
+                                        @else
+                                            <span class="text-green-600 dark:text-green-400">Received</span>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>
@@ -104,4 +117,3 @@
         </div>
     </div>
 </x-app-layout>
-
