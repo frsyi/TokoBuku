@@ -161,14 +161,12 @@ class TransactionController extends Controller
         }
     }
 
-    // TransactionController.php
+    public function toggleConfirmation(Transaction $transaction)
+    {
+        $transaction->confirmation = !$transaction->confirmation;
+        $transaction->save();
 
-public function toggleConfirmation(Transaction $transaction)
-{
-    $transaction->confirmation = !$transaction->confirmation;
-    $transaction->save();
-
-    return back();
-}
+        return redirect()->back()->with('status', 'Transaction status updated successfully.');
+    }
 
 }

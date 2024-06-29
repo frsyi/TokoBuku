@@ -40,7 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/transaction/{transaction}/unreceived', [TransactionController::class, 'unreceived'])->name('transaction.unreceived');
     Route::patch('/transaction/{transaction}/toggle-confirmation', [TransactionController::class, 'toggleConfirmation'])->name('transaction.toggleConfirmation');
 
-
 });
 
 // Route group for admin middleware

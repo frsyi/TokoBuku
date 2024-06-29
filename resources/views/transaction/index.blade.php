@@ -105,22 +105,3 @@
     </div>
 </x-app-layout>
 
-<script>
-    document.querySelectorAll('form[id^="unreceived-form"]').forEach(form => {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const button = form.querySelector('button');
-            button.textContent = 'Received';
-            this.submit();
-        });
-    });
-
-    document.querySelectorAll('form[id^="received-form"]').forEach(form => {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const button = form.querySelector('button');
-            button.textContent = 'Not Received';
-            this.submit();
-        });
-    });
-</script>
