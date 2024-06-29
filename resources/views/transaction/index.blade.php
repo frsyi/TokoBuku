@@ -50,25 +50,59 @@
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->tracking_number }}</td>
                                 @endif
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if (!$transaction->is_complete)
-                                        <form action="{{ route('transaction.complete', $transaction) }}" method="Post">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="text-green-600 dark:text-green-400">
-                                                Delivered
-                                            </button>
-                                        </form>
+                                    @if(Auth::check() && Auth::user()->is_admin)
+                                        @if (!$transaction->order_status)
+                                            <form action="{{ route('transaction.processed', $transaction) }}" method="Post">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="text-blue-600 dark:text-blue-400">
+                                                    Processed
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('transaction.delivered', $transaction) }}" method="Post">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="text-green-600 dark:text-green-400">
+                                                    Delivered
+                                                </button>
+                                            </form>
+                                        @endif
                                     @else
-                                        <form action="{{ route('transaction.uncomplete', $transaction) }}" method="Post">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="text-blue-600 dark:text-blue-400">
-                                                Pending
-                                            </button>
-                                        </form>
+                                        @if (!$transaction->order_status)
+                                            <span class="text-yellow-600 dark:text-yellow-400">Processed</span>
+                                        @else
+                                            <span class="text-green-600 dark:text-green-400">Delivered</span>
+                                        @endif
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->status ? 'Received' : 'Not Received' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if(Auth::check() && !Auth::user()->is_admin)
+                                        @if (!$transaction->confirmation)
+                                            <form action="{{ route('transaction.unreceived', $transaction) }}" method="Post">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="text-green-600 dark:text-green-400">
+                                                    Not Received
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('transaction.received', $transaction) }}" method="Post">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="text-blue-600 dark:text-blue-400">
+                                                    Received
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @else
+                                        @if (!$transaction->confirmation)
+                                            <span class="text-yellow-600 dark:text-yellow-400">Unreceived</span>
+                                        @else
+                                            <span class="text-green-600 dark:text-green-400">Received</span>
+                                        @endif
+                                    @endif
+                                </td>
                             </tr>
                             @empty
                             <tr class="bg-white dark:bg-gray-800">

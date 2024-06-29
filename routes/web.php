@@ -34,8 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::get('transaction/show/{id}', [TransactionController::class, 'show'])->name('transaction.show');
     Route::post('transaction/checkout', [TransactionController::class, 'checkout'])->name('transaction.checkout');
     Route::patch('transaction/{id}/updateTrackingNumber', [TransactionController::class, 'updateTrackingNumber'])->name('transaction.updateTrackingNumber');
-    Route::patch('transaction/{transaction}/complete', [TransactionController::class, 'complete'])->name('transaction.complete');
-    Route::patch('transaction/{transaction}/uncomplete', [TransactionController::class, 'uncomplete'])->name('transaction.uncomplete');
+    Route::patch('transaction/{transaction}/delivered', [TransactionController::class, 'delivered'])->name('transaction.delivered');
+    Route::patch('transaction/{transaction}/processed', [TransactionController::class, 'processed'])->name('transaction.processed');
+    Route::patch('transaction/{transaction}/received', [TransactionController::class, 'received'])->name('transaction.received');
+    Route::patch('transaction/{transaction}/unreceived', [TransactionController::class, 'unreceived'])->name('transaction.unreceived');
 });
 
 // Route group for admin middleware

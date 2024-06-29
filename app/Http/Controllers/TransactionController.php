@@ -121,23 +121,43 @@ class TransactionController extends Controller
         return redirect()->route('transaction.index', $id)->with('success', 'Tracking number updated successfully!');
     }
 
-    public function complete(Transaction $transaction)
+    public function delivered(Transaction $transaction)
     {
-        if (auth()->user()->id == $transaction->user_id) {
-            $transaction->update(['is_complete' => true]);
-            return redirect()->route('transaction.index')->with('success', 'Transaction marked as complete!');
+        if (auth()->user()->is_admin) {
+            $transaction->update(['order_status' => true]);
+            return redirect()->route('transaction.index')->with('success', 'Transaction marked as delivered!');
+        } else {
+            return redirect()->route('transaction.index')->with('danger', 'You are not authorized to mark this transaction as delivered!');
         }
-
-        return redirect()->route('transaction.index')->with('danger', 'You are not authorized to complete this!');
     }
 
-    public function uncomplete(Transaction $transaction)
+    public function processed(Transaction $transaction)
     {
-        if (auth()->user()->id == $transaction->user_id) {
-            $transaction->update(['is_complete' => false]);
-            return redirect()->route('transaction.index')->with('success', 'Order uncompleted successfully!');
+        if (auth()->user()->is_admin) {
+            $transaction->update(['order_status' => false]);
+            return redirect()->route('transaction.index')->with('success', 'Transaction marked as processed!');
+        } else {
+            return redirect()->route('transaction.index')->with('danger', 'You are not authorized to mark this transaction as processed!');
         }
+    }
 
-        return redirect()->route('transaction.index')->with('danger', 'You are not authorized to uncomplete this!');
+    public function received(Transaction $transaction)
+    {
+        if (!auth()->user()->is_admin) {
+            $transaction->update(['confirmation' => true]);
+            return redirect()->route('transaction.index')->with('success', 'Transaction marked as received!');
+        } else {
+            return redirect()->route('transaction.index')->with('danger', 'You are not authorized to mark this transaction as received!');
+        }
+    }
+
+    public function unreceived(Transaction $transaction)
+    {
+        if (!auth()->user()->is_admin) {
+            $transaction->update(['confirmation' => false]);
+            return redirect()->route('transaction.index')->with('success', 'Transaction marked as unreceived!');
+        } else {
+            return redirect()->route('transaction.index')->with('danger', 'You are not authorized to mark this transaction as unreceived!');
+        }
     }
 }
