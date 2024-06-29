@@ -160,4 +160,15 @@ class TransactionController extends Controller
             return redirect()->route('transaction.index')->with('danger', 'You are not authorized to mark this transaction as unreceived!');
         }
     }
+
+    // TransactionController.php
+
+public function toggleConfirmation(Transaction $transaction)
+{
+    $transaction->confirmation = !$transaction->confirmation;
+    $transaction->save();
+
+    return back();
+}
+
 }

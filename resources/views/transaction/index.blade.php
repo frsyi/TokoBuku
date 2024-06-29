@@ -78,29 +78,17 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if(Auth::check() && !Auth::user()->is_admin)
-                                        @if (!$transaction->confirmation)
-                                            <form action="{{ route('transaction.unreceived', $transaction) }}" method="Post">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="text-green-600 dark:text-green-400">
-                                                    Not Received
-                                                </button>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('transaction.received', $transaction) }}" method="Post">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="text-blue-600 dark:text-blue-400">
-                                                    Received
-                                                </button>
-                                            </form>
-                                        @endif
+                                        <form action="{{ route('transaction.toggleConfirmation', $transaction) }}" method="Post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="text-{{ $transaction->confirmation ? 'blue' : 'green' }}-600 dark:text-{{ $transaction->confirmation ? 'blue' : 'green' }}-400">
+                                                {{ $transaction->confirmation ? 'Received' : 'Not Received' }}
+                                            </button>
+                                        </form>
                                     @else
-                                        @if (!$transaction->confirmation)
-                                            <span class="text-yellow-600 dark:text-yellow-400">Unreceived</span>
-                                        @else
-                                            <span class="text-green-600 dark:text-green-400">Received</span>
-                                        @endif
+                                        <span class="text-{{ $transaction->confirmation ? 'green' : 'yellow' }}-600 dark:text-{{ $transaction->confirmation ? 'green' : 'yellow' }}-400">
+                                            {{ $transaction->confirmation ? 'Received' : 'Unreceived' }}
+                                        </span>
                                     @endif
                                 </td>
                             </tr>
@@ -116,3 +104,23 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    document.querySelectorAll('form[id^="unreceived-form"]').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const button = form.querySelector('button');
+            button.textContent = 'Received';
+            this.submit();
+        });
+    });
+
+    document.querySelectorAll('form[id^="received-form"]').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const button = form.querySelector('button');
+            button.textContent = 'Not Received';
+            this.submit();
+        });
+    });
+</script>
