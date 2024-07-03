@@ -50,7 +50,7 @@ class BookController extends Controller
                 'title' => 'required|string|max:255',
                 'author' => 'required|string|max:255',
                 'publication_year' => 'required|integer',
-                'price' => 'required|integer',
+                'price' => 'required|numeric',
                 'description' => 'required|string',
                 'category_id' => 'required|integer|exists:categories,id',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
