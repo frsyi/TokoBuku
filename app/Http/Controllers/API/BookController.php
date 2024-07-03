@@ -18,6 +18,12 @@ class BookController extends Controller
     {
         $books = Book::with('category')->orderBy('created_at', 'desc')->get();
 
+        $books->transform(function ($book) {
+            $book->image = asset('storage/' . $book->image);
+
+            return $book;
+        });
+
         return response()->json([
             'status' => 'success',
             'data' => [
