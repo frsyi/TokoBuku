@@ -128,33 +128,6 @@
 
                 </div>
             </div>
-            <div id="team" class="py-12">
-                <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">Our Team</h2>
-                    <div class="grid grid-cols-1 gap-8 mt-8 sm:grid-cols-5 lg:grid-cols-5">
-                        <!-- Team Members -->
-                        <div class="text-center">
-                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Beatrix Devanti Agsi</h3>
-                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140001</p>
-                        </div>
-                        <div class="text-center">
-                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Dianitasya Ananda Masta</h3>
-                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140011</p>
-                        </div>
-                        <div class="text-center">
-                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Fahma Rosyidah</h3>
-                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140030</p>
-                        </div>
-                        <div class="text-center">
-                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Siti Marfungah Dwi Lestari</h3>
-                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140038</p>
-                        </div>
-                        <div class="text-center">
-                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-gray-100">Sofi Miranda</h3>
-                            <p class="mt-2 text-gray-600 dark:text-gray-300">20210140076</p>
-                        </div>
-                    </div>
-                </div>
 
 
 

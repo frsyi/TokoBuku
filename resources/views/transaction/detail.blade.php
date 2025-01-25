@@ -33,12 +33,52 @@
         color: #a0aabd;
     }
 
-    /* CSS untuk gambar bukti pembayaran */
     .payment-proof img {
         max-width: 300px;
         height: auto;
         margin-top: 1rem;
         border-radius: 0.5rem;
+    }
+
+    /* CSS untuk mencetak */
+    @media print {
+        /* Sembunyikan tombol, navigasi, dan elemen lain yang tidak diperlukan */
+        nav,
+        header,
+        footer,
+        .sidebar,
+        .navigation,
+        button,
+        .btn,
+        .flex.justify-end {
+            display: none !important;
+        }
+
+        /* Perbaikan layout saat mencetak */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #fff;
+            color: #000;
+        }
+
+        /* Tabel tetap rapi */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Atur ukuran dan orientasi halaman */
+        @page {
+            margin: 1cm;
+        }
     }
 </style>
 
@@ -129,8 +169,15 @@
                         @endif
                     </div>
                     @endif
-
                 </div>
+                <!-- Tambahan tombol cetak -->
+        <div class="flex justify-end mt-6">
+            <button
+                onclick="window.print()"
+                class="px-4 py-2 text-white bg-blue-600 rounded-md shadow hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600">
+                <i class="mr-2 fas fa-print"></i>Cetak
+            </button>
+        </div>
             </div>
         </div>
     </div>
